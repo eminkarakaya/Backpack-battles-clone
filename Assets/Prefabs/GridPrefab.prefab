@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 7204673846924805042}
   - component: {fileID: -2410108916105864289}
   m_Layer: 6
-  m_Name: 9-Sliced
+  m_Name: GridPrefab
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

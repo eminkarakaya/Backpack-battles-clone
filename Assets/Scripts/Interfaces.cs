@@ -1,26 +1,65 @@
 using UnityEngine;
-public interface IClickable
+public interface IEnvantable 
+{
+    public void PutInSlotMap();
+    public void PutInSlotMapError();
+    public void TakeItOutSlotMap();
+}
+public interface IDragAndDropable
 {
     public void OnDrag();
     public void OnTouchEnd();
     public void Select();
 }
-public interface ISlotable
+
+public interface ISlotForEnvanter
 {
     public void OnPointerExit();
     public void OnPointerEnter();
 }
-public interface IInput
+public interface ISlotForItem
 {
-    public ISlotable OnPointerSlotable(int layerMask);
-    public IClickable SelectClickable(int layerMask);
+    public void OnPointerExit();
+    public void OnPointerEnter();
+}
+public interface ISlotForGrid
+{
+    public void OnPointerExit();
+    public void OnPointerEnter();
+}
+
+
+// Inputs
+public interface IInputItem
+{
+    public IDragAndDropable SelectClickable(int layerMask);
     public bool UnSelectClickable();
     public void UpdateTick();
     public bool CheckClickable(int layerMask);
-    
 }
-public enum ItemType
+public interface IInputEnvanterItem
 {
-    Grape,
-    Banana
+    public IEnvantable SelectClickable(int layerMask);
+    public bool UnSelectClickable();
+    public void UpdateTick();
+    public bool CheckClickable(int layerMask);
+    public ISlotForEnvanter OnPointerSlotable(int layerMask);
+
+}
+public interface IInputSlotMap
+{
+    public ISlotForGrid OnPointerSlotable(int layerMask);
+}
+
+
+
+
+
+
+
+
+
+public interface ISlotable
+{
+    public void PutInSlot();
 }

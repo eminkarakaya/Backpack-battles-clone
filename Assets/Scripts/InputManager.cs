@@ -1,12 +1,9 @@
-using UnityEngine;
 public class InputManager
 {
-    ISlotable slotable;
-
-    IClickable clickable;
-    ISlotable Slotable{get=>slotable;
+    ISlotForGrid slotable;
+    ISlotForGrid Slotable{get=>slotable;
     set{
-        if(value == null && clickable != null)
+        if(value == null && Envantable != null)
         {
             if(slotable != null)
             {
@@ -17,7 +14,7 @@ public class InputManager
         }
         if(value != slotable)
         {       
-            if(clickable != null)
+            if(Envantable != null)
             {
                 if(slotable != null)
                     slotable.OnPointerExit();
@@ -31,7 +28,39 @@ public class InputManager
         }
         slotable = value;
     }}
-    public IClickable Clickable {
+
+    ISlotForEnvanter slotForEnvanter;
+    ISlotForEnvanter SlotForEnvanter{get=>slotForEnvanter;
+        set{
+            if(value == null && DragAndDropable != null)
+            {
+                if(slotForEnvanter != null)
+                {
+                    slotForEnvanter.OnPointerExit();
+                    slotForEnvanter = value;
+                }
+                return;
+            }
+            if(value != slotForEnvanter)
+            {       
+                if(DragAndDropable != null)
+                {
+                    if(slotForEnvanter != null)
+                        slotForEnvanter.OnPointerExit();
+                    slotForEnvanter = value;
+                    if(slotForEnvanter != null)
+                    {
+                        slotForEnvanter.OnPointerEnter();
+                    }
+                }
+                return;
+            }
+            slotForEnvanter = value;
+        }}
+    ISlotForItem slotForItem;
+    
+    IDragAndDropable clickable;
+    public IDragAndDropable DragAndDropable {
         get=>clickable;
         set
         {
@@ -41,44 +70,106 @@ public class InputManager
                 clickable.Select();
         }
     }
-    IInput Input;
+    IEnvantable envantable;
+
+    IEnvantable Envantable{get=>envantable;
+    set{
+        envantable = value;
+        // if(value == null && envantable != null)
+        // {
+        //     if(envantable != null)
+        //     {
+        //         envantable.OnPointerExit();
+        //         envantable = value;
+        //     }
+        //     return;
+        // }
+        // if(value != envantable)
+        // {       
+        //     if(envantable != null)
+        //     {
+        //         if(envantable != null)
+        //             envantable.OnPointerExit();
+        //         envantable = value;
+        //         if(envantable != null)
+        //         {
+        //             envantable.OnPointerEnter();
+        //         }
+        //     }
+        //     return;
+        // }
+        // envantable = value;
+    }}
+
+    IInputItem InputItem;
+    IInputEnvanterItem InputEnvanterItem;
+    IInputSlotMap InputSlotMap;
     public void Initialize()
     {
-        Input = new CastRayClass(OnTouchBegan,OnTouching,OnTouchEnd);
+        InputItem = new CastRayClassForItem(OnTouchBegan,OnTouching,OnTouchEndItem);
+        InputEnvanterItem = new CastRayClassForEnvanterItem(OnTouchBegan,OnTouching,OnTouchEndEnvanterItem);
+        InputSlotMap = new CastRayClassForSlotMap();
     }
-    public void UpdateTick(int layerMask,int gridLayerMask)
+    public void UpdateTick(int itemlayerMask,int gridLayerMask,int envanterLayerMask)
     {   
-        if(Input.UnSelectClickable())
+        // item
+        if(InputItem.UnSelectClickable())
         {
-            Clickable = null;
+            DragAndDropable = null;
         }
-        if (Input.CheckClickable(layerMask))
+        if (InputItem.CheckClickable(itemlayerMask))
         {
-            Clickable = Input.SelectClickable(layerMask);
+            DragAndDropable = InputItem.SelectClickable(itemlayerMask);
         }
-        Slotable = Input.OnPointerSlotable(gridLayerMask);
-        Input.UpdateTick();
+
+        // envanterItem
+        if(InputEnvanterItem.UnSelectClickable())
+        {
+            Envantable = null;
+        }
+        if(InputEnvanterItem.CheckClickable(envanterLayerMask))
+        {
+            Envantable = InputEnvanterItem.SelectClickable(envanterLayerMask);
+        }
+
+        // slotable
+        Slotable = InputSlotMap.OnPointerSlotable(gridLayerMask);
+        SlotForEnvanter = InputEnvanterItem.OnPointerSlotable(envanterLayerMask);
+        InputItem.UpdateTick();
     }
     public void OnTouchBegan()
     {
-        if(Clickable != null)
-            Clickable.Select();
+        if(DragAndDropable != null)
+            DragAndDropable.Select();
     }
     public void OnTouching()
     {
-        if(Clickable != null)
-            Clickable.OnDrag();
+        if(DragAndDropable != null)
+            DragAndDropable.OnDrag();
     }
-    public void OnTouchEnd()
+    public void OnTouchEndEnvanterItem()
     {
-        if(Clickable != null)
+        if(DragAndDropable != null)
         {
+            DragAndDropable.OnTouchEnd();
             if(Slotable != null)
             {
                 Slotable.OnPointerExit();
                 Slotable = null;
             }
-            Clickable.OnTouchEnd();
         }
     }
+    public void OnTouchEndItem()
+    {
+        if(DragAndDropable != null)
+        {
+            DragAndDropable.OnTouchEnd();
+            if(SlotForEnvanter != null)
+            {
+                SlotForEnvanter.OnPointerExit();
+                SlotForEnvanter = null;
+            }
+        }
+    }
+    
 }
