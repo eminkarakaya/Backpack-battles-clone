@@ -4,9 +4,11 @@ using UnityEngine;
 
 public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
 {
+    public Envanter envanter;
     public Grid grid;
     SpriteRenderer spriteRenderer;
     private void Start() {
+        envanter = GetComponentInParent<Envanter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void OpenPutableColor()

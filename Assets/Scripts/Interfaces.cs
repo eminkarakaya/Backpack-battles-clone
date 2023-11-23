@@ -2,7 +2,7 @@ using UnityEngine;
 public interface IEnvantable 
 {
     public void PutInSlotMap();
-    public void TakeItOutSlotMap();
+    public void TakeOffSlotMap();
 }
 public interface IDragAndDropable
 {

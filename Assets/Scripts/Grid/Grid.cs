@@ -6,14 +6,11 @@ using UnityEngine.EventSystems;
 
 public class Grid : MonoBehaviour , ISlotForGrid
 {
+    public GridInEnvanter gridInEnvanter;
     public Grid right;
     public Grid left;
     public Grid up;
     public Grid down;
-    public Grid upRight;
-    public Grid upLeft;
-    public Grid downRight;
-    public Grid downLeft;
     public Vector2Int index;
     SpriteRenderer spriteRenderer;
     BoxCollider2D boxCollider2D;
