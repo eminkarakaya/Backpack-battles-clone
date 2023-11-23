@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
 {
-    // [SerializeField] private int freeLayer,placedLayer;
-    BoxCollider2D [] childColliders;
+    GridInEnvanter [] childGridsInEnvanter; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
     SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject outline;
+    [SerializeField] private Direction4 direction;
+    public Vector2 EndPos { get; set; }
+
     private void Start() {
-        // gameObject.layer = freeLayer;
-        childColliders = GetComponentsInChildren<BoxCollider2D>();
+        childGridsInEnvanter = GetComponentsInChildren<GridInEnvanter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     Vector3 MouseWorldPosition()
@@ -23,11 +24,38 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
     public void OnDrag()
     {
         transform.position = MouseWorldPosition();
+        if(EnvanterSystem.Instance.selectedGrid!=null&&EnvanterSystem.Instance.selectedGrid.CheckGrid(transform.position))
+        {
+            OpenPutableColorChilds();
+        }
+        else
+        {
+            ClosePutableColorChilds();
+        }
     }
-
+    private void AssignGridInEnvantersGrids(List<Grid> grids)
+    {
+        for (int i = 0; i < childGridsInEnvanter.Length; i++)
+        {
+            childGridsInEnvanter[i].grid = grids[i];
+        }
+    }
+    private void SetGridsColorToPuttingColor()
+    {
+        foreach (var item in childGridsInEnvanter)
+        {
+            item.ClosePutableColor();
+        }
+    }
     public void OnTouchEnd()
     {
-        PutInSlotMap();
+        if(EnvanterSystem.Instance.selectedGrid!=null) 
+        {
+            if(EnvanterSystem.Instance.selectedGrid.CheckGrid(transform.position))
+            {
+                PutInSlotMap();
+            }
+        }
         if(outline != null) 
             outline.SetActive(false);
     }
@@ -39,43 +67,54 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
     }
     private void OpenColliders()
     {
-        foreach (var item in childColliders)
+        foreach (var item in childGridsInEnvanter)
         {
-            item.enabled = true;
+            item.GetComponent<Collider2D>().enabled = true;
         }
     }
     private void CloseColliders()
     {
-        foreach (var item in childColliders)
+        foreach (var item in childGridsInEnvanter)
         {
-            item.enabled = false;
+            item.GetComponent<Collider2D>().enabled = false;
         }
     }
-    private void ChangeFreeLayer()
+    private void OpenPutableColorChilds()
     {
-        // gameObject.layer = placedLayer;
+        foreach (var item in childGridsInEnvanter)
+        {
+            item.OpenPutableColor();
+        }
     }
-    private void ChangePlacedLayer()
+    private void ClosePutableColorChilds()
     {
-        // gameObject.layer = freeLayer;
+        foreach (var item in childGridsInEnvanter)
+        {
+            item.ClosePutableColor();
+        }
     }
     public void PutInSlotMap()
     {
         if(EnvanterSystem.Instance.selectedGrid!= null)
         {
-            transform.position = EnvanterSystem.Instance.selectedGrid.transform.position;
+            
+            List<Grid> grids = EnvanterSystem.Instance.selectedGrid.GetGrids(transform.position);
+            AssignGridInEnvantersGrids(grids);
+            transform.position = Grid.GetCenter(grids);
+            // transform.position = EnvanterSystem.Instance.selectedGrid.transform.position;
             EnvanterSystem.Instance.selectedGrid.TriggerOnPointerExit();
             OpenColliders();
-            ChangePlacedLayer();
+            SetGridsColorToPuttingColor();
         }
     }
+    
 
-    public void PutInSlotMapError()
+    public void TakeItOutSlotMap()
     {
         
     }
 
-    public void TakeItOutSlotMap()
+    public void PuttingError()
     {
         
     }

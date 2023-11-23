@@ -58,6 +58,7 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
     {
         if(Input.GetMouseButtonUp(0))
         {
+            
             OnTouchEnd?.Invoke();
             return true;
         }
@@ -74,10 +75,13 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
     public ISlotForEnvanter OnPointerSlotable(int layerMask)
     {
         RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
-        if(hit.collider == null) return null;
+        if(hit.collider == null) 
+        {
+            return null;
+        }
+
         if(hit.collider.TryGetComponent(out ISlotForEnvanter slotForEnvanter))
         {
-            
             return slotForEnvanter;
         }
         return null;
@@ -134,6 +138,8 @@ public class CastRayClassForItem : IInputItem
     {
         if(Input.GetMouseButtonUp(0))
         {
+            if(clickable != null)
+                clickable.EndPos = Input.mousePosition;
             OnTouchEnd?.Invoke();
             return true;
         }

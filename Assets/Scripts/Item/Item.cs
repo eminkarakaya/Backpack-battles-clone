@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Item : MonoBehaviour, IDragAndDropable , ISlotForItem
 {
+    public Vector2 EndPos { get; set; }
     [SerializeField] private GameObject outline;
     Vector3 MouseWorldPosition()
     {
@@ -44,6 +45,11 @@ public class Item : MonoBehaviour, IDragAndDropable , ISlotForItem
     }
 
     public void OnPointerEnter()
+    {
+        
+    }
+
+    public void PuttingError()
     {
         
     }

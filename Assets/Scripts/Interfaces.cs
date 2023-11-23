@@ -2,14 +2,15 @@ using UnityEngine;
 public interface IEnvantable 
 {
     public void PutInSlotMap();
-    public void PutInSlotMapError();
     public void TakeItOutSlotMap();
 }
 public interface IDragAndDropable
 {
+    public Vector2 EndPos { get; set; }
     public void OnDrag();
     public void OnTouchEnd();
     public void Select();
+    public void PuttingError();
 }
 
 public interface ISlotForEnvanter
@@ -62,4 +63,22 @@ public interface IInputSlotMap
 public interface ISlotable
 {
     public void PutInSlot();
+}
+
+
+
+public enum Direction4
+{
+    UpLeft,
+    UpRight,
+    DownLeft,
+    DownRight
+}
+public enum DirectionRightLeft
+{
+    Right,Left
+}
+public enum DirectionUpDown
+{
+    Up,Down
 }
