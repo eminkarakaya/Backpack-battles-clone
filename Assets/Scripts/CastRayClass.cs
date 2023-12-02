@@ -26,8 +26,12 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
         this.OnTouchEnd = OnTouchEnd;
         this.OnTouching = OnTouching;
     }
-
-    public bool CheckClickable(int layerMask)
+    /// <summary>
+    /// parametredeki layere sahıp herhangi bir objeye değiyor mu
+    /// </summary>
+    /// <param name="layerMask"></param>
+    /// <returns></returns>
+    public bool CheckClickable(int layerMask)   
     {
         if(Input.GetMouseButtonDown(0))
         {
@@ -35,7 +39,8 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
             if(hit.collider == null) return false;
             if(hit.collider.TryGetComponent(out envantable))
             {
-                return true;
+                if(!envantable.IsInvolveAnyItem()) // eger envanterde herhangı bı ıtem varsa secemıyorz.
+                    return true;
             }
         }
         return false;
@@ -89,18 +94,28 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
 }
 public class CastRayClassForItem : IInputItem
 {
-    public CastRayClassForItem(Action OnTouchBegan,Action OnTouching,Action OnTouchEnd)
+    public CastRayClassForItem(Action OnTouchBegan,Action OnTouching,Action OnTouchEnd,Action OnRotate)
     {
         this.OnTouchBegan = OnTouchBegan;
         this.OnTouchEnd = OnTouchEnd;
         this.OnTouching = OnTouching;
+        this.OnRotate = OnRotate;
     }
+
+    // public CastRayClassForItem(Action onTouchBegan, Action onTouching, Action onTouchEndItem)
+    // {
+    //     OnTouchBegan = onTouchBegan;
+    //     OnTouching = onTouching;
+    //     this.onTouchEndItem = onTouchEndItem;
+    // }
 
     public Action OnTouchBegan;
     public Action OnTouching;
     public Action OnTouchEnd;
+    public Action OnRotate;
     IDragAndDropable clickable;
-    
+    private Action onTouchEndItem;
+
     public IDragAndDropable SelectClickable(int layerMask)
     {
         RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
@@ -121,6 +136,7 @@ public class CastRayClassForItem : IInputItem
             if(hit.collider == null) return false;
             if(hit.collider.TryGetComponent(out clickable))
             {
+                
                 return true;
             }
         }
@@ -131,6 +147,10 @@ public class CastRayClassForItem : IInputItem
         if(Input.GetMouseButton(0))
         {
             OnTouching?.Invoke();
+        }
+        if(Input.GetKeyDown(KeyCode.R))
+        {
+            OnRotate?.Invoke();
         }
     }
 

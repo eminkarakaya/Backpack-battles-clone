@@ -1,3 +1,4 @@
+using UnityEngine;
 public class InputManager
 {
     ISlotForGrid slotable;
@@ -78,30 +79,6 @@ public class InputManager
         envantable = value;
             if(envantable != null)
         envantable.Select();
-        // if(value == null && envantable != null)
-        // {
-        //     if(envantable != null)
-        //     {
-        //         envantable.OnPointerExit();
-        //         envantable = value;
-        //     }
-        //     return;
-        // }
-        // if(value != envantable)
-        // {       
-        //     if(envantable != null)
-        //     {
-        //         if(envantable != null)
-        //             envantable.OnPointerExit();
-        //         envantable = value;
-        //         if(envantable != null)
-        //         {
-        //             envantable.OnPointerEnter();
-        //         }
-        //     }
-        //     return;
-        // }
-        // envantable = value;
     }}
 
     IInputItem InputItem;
@@ -109,7 +86,7 @@ public class InputManager
     IInputSlotMap InputSlotMap;
     public void Initialize()
     {
-        InputItem = new CastRayClassForItem(OnTouchBegan,OnTouching,OnTouchEndItem);
+        InputItem = new CastRayClassForItem(OnTouchBegan,OnTouching,OnTouchEndItem,OnRotate);
         InputEnvanterItem = new CastRayClassForEnvanterItem(OnTouchBegan,OnTouchingEnvanterItem,OnTouchEndEnvanterItem);
         InputSlotMap = new CastRayClassForSlotMap();
     }
@@ -139,6 +116,7 @@ public class InputManager
         Slotable = InputSlotMap.OnPointerSlotable(gridLayerMask);
         SlotForEnvanter = InputEnvanterItem.OnPointerSlotable(envanterGridLayerMask);
         InputItem.UpdateTick();
+        // OnRotate();
     }
     // item
     public void OnTouchBegan()
@@ -170,7 +148,17 @@ public class InputManager
             }
         }
     }
-
+    public void OnRotate()
+    {
+        if(DragAndDropable != null)
+        {
+            DragAndDropable.RotateClockwise90Degree();
+        }
+        else if(Envantable != null)
+        {
+            Envantable.RotateClockwise90Degree();
+        }
+    }
     // envanter
     // public void OnTouchBeganEnvanterItem()
     // {

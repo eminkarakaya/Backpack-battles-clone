@@ -73,7 +73,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -134,7 +134,7 @@ Transform:
   - {fileID: 1861281815500880569}
   - {fileID: 9113643836178076655}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4974249416817533013
 SpriteRenderer:
@@ -179,7 +179,7 @@ SpriteRenderer:
   m_SortingOrder: 3
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
-  m_Color: {r: 0.38679248, g: 0.3043254, b: 0.3043254, a: 1}
+  m_Color: {r: 0.38679248, g: 0.3043254, b: 0.3043254, a: 0.21960784}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -201,9 +201,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a8f7d8649831f4daeb38cfd5147dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gridsInItem:
+  gridsInItemDefault:
   - {fileID: 7435624682794187067}
   - {fileID: 8131652788202941518}
+  gridsInItemRotate: []
+  rotateStage: 0
   outline: {fileID: 4328631229282564974}
 --- !u!61 &7136377086266684999
 BoxCollider2D:
@@ -408,7 +410,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}

@@ -5,11 +5,16 @@ using UnityEngine;
 
 public abstract class Envanter : MonoBehaviour, IEnvantable
 {
-    GridInEnvanter [] childGridsInEnvanter; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
+    protected GridInEnvanter [] childGridsInEnvanterDefault; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
+    GridInEnvanter [] childGridsInEnvanterByRotation;
     SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject outline;
-    public Vector2 EndPos { get; set; }
-    public byte RotateStage { get; set; }
+    [SerializeField] private byte rotateStage;
+    public byte RotateStage { get => rotateStage; set
+    {
+        rotateStage = value;
+        rotateStage%=4;
+    }} 
 
     bool isPlaced;
     [SerializeField] bool isSelected;
@@ -17,8 +22,9 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     public abstract bool CheckGrid(Vector3 pos);
     
     private void Start() {
-        childGridsInEnvanter = GetComponentsInChildren<GridInEnvanter>();
+        childGridsInEnvanterDefault = GetComponentsInChildren<GridInEnvanter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
+        childGridsInEnvanterByRotation = childGridsInEnvanterDefault;
     }
 
     public void OnDrag()
@@ -50,7 +56,7 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     
     public void Select()
     {
-        if(CheckAnyItem())
+        if(IsInvolveAnyItem())
         {
             return;
         }
@@ -65,66 +71,71 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     }
     private bool CheckAnyItem()
     {
-        foreach (var item in childGridsInEnvanter)
+        foreach (var item in childGridsInEnvanterDefault)
         {
             if (item.CheckEnvanterGridAnyItem())
                 return true;
         }
         return false;
     }
+    public abstract GridInEnvanter[] GetChildGridsInEnvanterByRotation(int rotationIndex);
+    
     Vector3 MouseWorldPosition()
     {
         var mouseScreenPos = Input.mousePosition;
         mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
         return Camera.main.ScreenToWorldPoint(mouseScreenPos);
     }
+
+    // buranın sırası
     private void AssignGridInEnvantersGrids(List<Grid> grids)
     {
-        for (int i = 0; i < childGridsInEnvanter.Length; i++)
+        
+        for (int i = 0; i < childGridsInEnvanterByRotation.Length; i++)
         {
-            childGridsInEnvanter[i].grid = grids[i];
-            grids[i].gridInEnvanter = childGridsInEnvanter[i];
+            childGridsInEnvanterByRotation[i].grid = grids[i];
+            grids[i].gridInEnvanter = childGridsInEnvanterByRotation[i];
         }
     }
     private void AssignGridInEnvantersGridsToNull()
     {
-        for (int i = 0; i < childGridsInEnvanter.Length; i++)
+        for (int i = 0; i < childGridsInEnvanterDefault.Length; i++)
         {
-            childGridsInEnvanter[i].grid.gridInEnvanter = null;
-            childGridsInEnvanter[i].grid = null;
+            childGridsInEnvanterDefault[i].grid.gridInEnvanter = null;
+            childGridsInEnvanterDefault[i].grid = null;
         }
     }
     private void SetGridsColorToPuttingColor()
     {
-        foreach (var item in childGridsInEnvanter)
+        foreach (var item in childGridsInEnvanterDefault)
         {
             item.ClosePutableColor();
         }
     }
     private void OpenColliders()
     {
-        foreach (var item in childGridsInEnvanter)
+        foreach (var item in childGridsInEnvanterDefault)
         {
             item.GetComponent<Collider2D>().enabled = true;
         }
     }
     private void CloseColliders()
     {
-        foreach (var item in childGridsInEnvanter)
+        foreach (var item in childGridsInEnvanterDefault)
         {
             item.GetComponent<Collider2D>().enabled = false;
         }
     }
     private void OpenPutableColorChilds()
     {
-        foreach (var item in childGridsInEnvanter)
+        foreach (var item in childGridsInEnvanterDefault)
         {
             item.OpenPutableColor();
         }
     }
     private void ClosePutableColorChilds()
     {
-        foreach (var item in childGridsInEnvanter)
+        foreach (var item in childGridsInEnvanterDefault)
         {
             item.ClosePutableColor();
         }
@@ -133,6 +144,7 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     {
         if(EnvanterSystem.Instance.selectedGrid!= null)
         {
+            // buranın sırası
             List<Grid> grids = GetGrids(transform.position);
             List<IEnvantable> envanters = CheckPlaceAnyEnvanter(grids);
             foreach (var item in envanters)
@@ -177,5 +189,31 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     public void PuttingError()
     {
         TakeOffPosition();
+    }
+    public void RotateCounterClockwise90Degree()
+    {
+        RotateStage --;
+        childGridsInEnvanterByRotation = GetChildGridsInEnvanterByRotation(rotateStage);
+        RotateCounterClockwiseAnimation();
+    }
+
+    public void RotateClockwise90Degree()
+    {
+        RotateStage ++;
+        childGridsInEnvanterByRotation = GetChildGridsInEnvanterByRotation(rotateStage);
+        Rotate90ClockwiseAnimation();
+    }
+    private void Rotate90ClockwiseAnimation()
+    {
+        transform.rotation = Quaternion.Euler(0,0,RotateStage * 90);
+    }
+    private void RotateCounterClockwiseAnimation()
+    {
+        transform.rotation = Quaternion.Euler(0,0,RotateStage * 90);
+    }
+
+    public bool IsInvolveAnyItem()
+    {
+        return CheckAnyItem();
     }
 }

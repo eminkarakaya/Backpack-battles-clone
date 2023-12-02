@@ -9,6 +9,9 @@ public interface IDragAndDropableBase
     /// 3 -> +270 Degree
     /// </summary>
     /// <value></value>
+    
+    public void RotateCounterClockwise90Degree();
+    public void RotateClockwise90Degree();
     public byte RotateStage { get; set; }
     public void OnDrag();
     public void OnTouchEnd();
@@ -18,7 +21,7 @@ public interface IDragAndDropableBase
 }
 public interface IEnvantable : IDragAndDropableBase
 {
-    
+    public bool IsInvolveAnyItem();
 }
 public interface IDragAndDropable : IDragAndDropableBase
 {
@@ -92,9 +95,9 @@ public enum Direction4
 }
 public enum DirectionRightLeft
 {
-    Right,Left
 }
-public enum DirectionUpDown
+public enum DirectionUpDownRightLeft
 {
+    Right,Left,
     Up,Down
 }

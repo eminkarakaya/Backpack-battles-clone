@@ -33,13 +33,13 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
         TriggerOnPointerExit();
     }
 
-    public bool CheckEnvanterGrid(Vector3 pos)
+    public bool CheckEnvanterGrid(Vector3 pos, byte rotateStage)
     {
-        return grid.CheckEnvanterGrid(pos);
+        return grid.CheckEnvanterGrid(pos,rotateStage);
     }
-    public List<GridInEnvanter> GetGridsUpDown(Vector3 pos)
+    public List<GridInEnvanter> GetGridsUpDown(Vector3 pos,byte rotateStage)
     {
-        return grid.GetGridsUpDown(pos);
+        return grid.GetGridsUpDown(pos,rotateStage);
     }
     public bool CheckEnvanterGridAnyItem()
     {
