@@ -5,7 +5,7 @@ using UnityEngine;
 public class InputManagerMono : MonoBehaviour
 {
     [SerializeField] private IDragAndDropable dragAndDropable;
-    public LayerMask layerMaskItem,layermaskGrid,layermaskEnvanter;
+    public LayerMask layerMaskItem,layermaskGrid,layermaskEnvanter,layermaskEnvanterGrid;
     InputManager inputManager = new InputManager();
     void Start()
     {
@@ -13,6 +13,6 @@ public class InputManagerMono : MonoBehaviour
     }
     void Update()
     {
-        inputManager.UpdateTick(layerMaskItem,layermaskGrid,layermaskEnvanter);
+        inputManager.UpdateTick(layerMaskItem,layermaskGrid,layermaskEnvanter,layermaskEnvanterGrid);
     }
 }

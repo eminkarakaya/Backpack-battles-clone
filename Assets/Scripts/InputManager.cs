@@ -45,6 +45,7 @@ public class InputManager
             {       
                 if(DragAndDropable != null)
                 {
+                    
                     if(slotForEnvanter != null)
                         slotForEnvanter.OnPointerExit();
                     slotForEnvanter = value;
@@ -59,15 +60,15 @@ public class InputManager
         }}
     ISlotForItem slotForItem;
     
-    IDragAndDropable clickable;
+    IDragAndDropable dragAndDropable;
     public IDragAndDropable DragAndDropable {
-        get=>clickable;
+        get=>dragAndDropable;
         set
         {
-            clickable = value;
+            dragAndDropable = value;
             
-            if(clickable != null)
-                clickable.Select();
+            if(dragAndDropable != null)
+                dragAndDropable.Select();
         }
     }
     IEnvantable envantable;
@@ -75,6 +76,8 @@ public class InputManager
     IEnvantable Envantable{get=>envantable;
     set{
         envantable = value;
+            if(envantable != null)
+        envantable.Select();
         // if(value == null && envantable != null)
         // {
         //     if(envantable != null)
@@ -107,57 +110,53 @@ public class InputManager
     public void Initialize()
     {
         InputItem = new CastRayClassForItem(OnTouchBegan,OnTouching,OnTouchEndItem);
-        InputEnvanterItem = new CastRayClassForEnvanterItem(OnTouchBegan,OnTouching,OnTouchEndEnvanterItem);
+        InputEnvanterItem = new CastRayClassForEnvanterItem(OnTouchBegan,OnTouchingEnvanterItem,OnTouchEndEnvanterItem);
         InputSlotMap = new CastRayClassForSlotMap();
     }
-    public void UpdateTick(int itemlayerMask,int gridLayerMask,int envanterLayerMask)
+    public void UpdateTick(int itemlayerMask,int gridLayerMask,int envanterLayerMask,int envanterGridLayerMask)
     {   
         // item
         if(InputItem.UnSelectClickable())
         {
             DragAndDropable = null;
         }
-        if (InputItem.CheckClickable(itemlayerMask))
-        {
-            DragAndDropable = InputItem.SelectClickable(itemlayerMask);
-        }
-
-        // envanterItem
         if(InputEnvanterItem.UnSelectClickable())
         {
             Envantable = null;
         }
-        if(InputEnvanterItem.CheckClickable(envanterLayerMask))
+        if (InputItem.CheckClickable(itemlayerMask))
+        {
+            DragAndDropable = InputItem.SelectClickable(itemlayerMask);
+        }
+        else if(InputEnvanterItem.CheckClickable(envanterLayerMask))
         {
             Envantable = InputEnvanterItem.SelectClickable(envanterLayerMask);
         }
+        // envanterItem
 
         // slotable
+        InputEnvanterItem.UpdateTick();
         Slotable = InputSlotMap.OnPointerSlotable(gridLayerMask);
-        SlotForEnvanter = InputEnvanterItem.OnPointerSlotable(envanterLayerMask);
+        SlotForEnvanter = InputEnvanterItem.OnPointerSlotable(envanterGridLayerMask);
         InputItem.UpdateTick();
     }
+    // item
     public void OnTouchBegan()
     {
         if(DragAndDropable != null)
+        {
             DragAndDropable.Select();
+        }
+
+        else if(Envantable != null)
+        {
+            Envantable.Select();
+        }
     }
     public void OnTouching()
     {
         if(DragAndDropable != null)
             DragAndDropable.OnDrag();
-    }
-    public void OnTouchEndEnvanterItem()
-    {
-        if(DragAndDropable != null)
-        {
-            DragAndDropable.OnTouchEnd();
-            if(Slotable != null)
-            {
-                Slotable.OnPointerExit();
-                Slotable = null;
-            }
-        }
     }
     public void OnTouchEndItem()
     {
@@ -168,6 +167,29 @@ public class InputManager
             {
                 SlotForEnvanter.OnPointerExit();
                 SlotForEnvanter = null;
+            }
+        }
+    }
+
+    // envanter
+    // public void OnTouchBeganEnvanterItem()
+    // {
+        
+    // }
+    public void OnTouchingEnvanterItem()
+    {
+        if(Envantable != null)
+            Envantable.OnDrag();
+    }
+    public void OnTouchEndEnvanterItem()
+    {
+        if(Envantable != null)
+        {
+            Envantable.OnTouchEnd();
+            if(Slotable != null)
+            {
+                Slotable.OnPointerExit();
+                Slotable = null;
             }
         }
     }

@@ -1,16 +1,28 @@
 using UnityEngine;
-public interface IEnvantable 
+
+public interface IDragAndDropableBase
 {
-    public void PutInSlotMap();
-    public void TakeOffSlotMap();
-}
-public interface IDragAndDropable
-{
-    public Vector2 EndPos { get; set; }
+    /// <summary>
+    /// 0 -> 0 Degree
+    /// 1 -> +90 Degree
+    /// 2 -> +180 Degree
+    /// 3 -> +270 Degree
+    /// </summary>
+    /// <value></value>
+    public byte RotateStage { get; set; }
     public void OnDrag();
     public void OnTouchEnd();
     public void Select();
-    public void PuttingError();
+    public void PutInSlotMap();
+    public void TakeOffSlotMap();
+}
+public interface IEnvantable : IDragAndDropableBase
+{
+    
+}
+public interface IDragAndDropable : IDragAndDropableBase
+{
+    
 }
 
 public interface ISlotForEnvanter
@@ -63,10 +75,14 @@ public interface IInputSlotMap
 public interface ISlotable
 {
     public void PutInSlot();
+    public void TakeOffSlot();
 }
 
 
-
+public enum Direction3x1
+{
+    Middle,Right,Left
+}
 public enum Direction4
 {
     UpLeft,

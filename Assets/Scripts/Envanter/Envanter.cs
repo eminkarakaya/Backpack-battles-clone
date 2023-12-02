@@ -1,15 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
-public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
+public abstract class Envanter : MonoBehaviour, IEnvantable
 {
     GridInEnvanter [] childGridsInEnvanter; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
     SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject outline;
     public Vector2 EndPos { get; set; }
-    bool isPlaced;
+    public byte RotateStage { get; set; }
 
+    bool isPlaced;
+    [SerializeField] bool isSelected;
+    public abstract List<Grid> GetGrids(Vector3 pos);
+    public abstract bool CheckGrid(Vector3 pos);
+    
     private void Start() {
         childGridsInEnvanter = GetComponentsInChildren<GridInEnvanter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
@@ -17,8 +23,9 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
 
     public void OnDrag()
     {
+        if(!isSelected) return;
         transform.position = MouseWorldPosition();
-        if(EnvanterSystem.Instance.selectedGrid!=null&&EnvanterSystem.Instance.selectedGrid.CheckGrid(transform.position))
+        if(EnvanterSystem.Instance.selectedGrid!=null && CheckGrid(transform.position))
         {
             OpenPutableColorChilds();
         }
@@ -31,17 +38,23 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
     {
         if(EnvanterSystem.Instance.selectedGrid!=null) 
         {
-            if(EnvanterSystem.Instance.selectedGrid.CheckGrid(transform.position))
+            if(CheckGrid(transform.position))
             {
                 PutInSlotMap();
             }
         }
         if(outline != null) 
             outline.SetActive(false);
+        isSelected = false;
     }
-
+    
     public void Select()
     {
+        if(CheckAnyItem())
+        {
+            return;
+        }
+        isSelected = true;
         if(isPlaced)
         {
             AssignGridInEnvantersGridsToNull();
@@ -49,6 +62,15 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
         isPlaced = false;
         if(outline != null) 
             outline.SetActive(true);
+    }
+    private bool CheckAnyItem()
+    {
+        foreach (var item in childGridsInEnvanter)
+        {
+            if (item.CheckEnvanterGridAnyItem())
+                return true;
+        }
+        return false;
     }
     Vector3 MouseWorldPosition()
     {
@@ -72,7 +94,6 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
             childGridsInEnvanter[i].grid = null;
         }
     }
-    
     private void SetGridsColorToPuttingColor()
     {
         foreach (var item in childGridsInEnvanter)
@@ -112,23 +133,23 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
     {
         if(EnvanterSystem.Instance.selectedGrid!= null)
         {
-            List<Grid> grids = EnvanterSystem.Instance.selectedGrid.GetGrids(transform.position);
-            List<Envanter> envanters = CheckPlaceAnyEnvanter(grids);
+            List<Grid> grids = GetGrids(transform.position);
+            List<IEnvantable> envanters = CheckPlaceAnyEnvanter(grids);
             foreach (var item in envanters)
             {
                 item.TakeOffSlotMap();
             }
             AssignGridInEnvantersGrids(grids);
-            transform.position = Grid.GetCenter(grids);
+            transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
             EnvanterSystem.Instance.selectedGrid.TriggerOnPointerExit();
             OpenColliders();
             SetGridsColorToPuttingColor();
             isPlaced = true;
         }
     }
-    private List<Envanter> CheckPlaceAnyEnvanter(List<Grid> grids)
+    private List<IEnvantable> CheckPlaceAnyEnvanter(List<Grid> grids)
     {
-        List<Envanter> envanters = new List<Envanter>();
+        List<IEnvantable> envanters = new List<IEnvantable>();
         foreach (var item in grids)
         {   
             if(item.gridInEnvanter != null)
@@ -155,6 +176,6 @@ public class Envanter : MonoBehaviour, IDragAndDropable,IEnvantable
 
     public void PuttingError()
     {
-        
+        TakeOffPosition();
     }
 }

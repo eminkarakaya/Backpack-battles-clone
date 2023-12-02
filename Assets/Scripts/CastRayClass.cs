@@ -138,8 +138,6 @@ public class CastRayClassForItem : IInputItem
     {
         if(Input.GetMouseButtonUp(0))
         {
-            if(clickable != null)
-                clickable.EndPos = Input.mousePosition;
             OnTouchEnd?.Invoke();
             return true;
         }

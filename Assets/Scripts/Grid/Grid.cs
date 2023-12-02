@@ -72,7 +72,18 @@ public class Grid : MonoBehaviour , ISlotForGrid
             down = EnvanterSystem.Instance.GetGridByIndex(new Vector2Int(index.x ,index.y + 1));
         }
     }
-    public Direction4 GetDirection(Vector3 pos)
+    public DirectionUpDown GetDirectionUpDown(Vector3 pos)
+    {
+        if(pos.y > boxCollider2D.bounds.center.y)
+        {
+            return DirectionUpDown.Up;
+        }
+        else
+        {
+            return DirectionUpDown.Down;
+        }
+    }
+    public Direction4 GetDirection4(Vector3 pos)
     {
         if(pos.x > boxCollider2D.bounds.center.x && pos.y > boxCollider2D.bounds.center.y)
         {
@@ -102,9 +113,63 @@ public class Grid : MonoBehaviour , ISlotForGrid
     // {
 
     // }
-    public bool CheckGrid(Vector3 pos)
+    public bool CheckEnvanterGrid(Vector3 pos)
     {
-        Direction4 dir = GetDirection(pos);
+        DirectionUpDown dir = GetDirectionUpDown(pos);
+        if(dir ==DirectionUpDown.Up)
+        {
+            if(up.gridInEnvanter != null)
+            {
+                return true;
+            }
+            return false;
+        }
+        else
+        {
+            if(down.gridInEnvanter != null)
+                return true;
+            return false;
+        }
+    }
+    public List<GridInEnvanter> GetGridsUpDown(Vector3 pos)
+    {
+        DirectionUpDown dir = GetDirectionUpDown(pos);
+        List<GridInEnvanter> grids = new List<GridInEnvanter>();
+        if(dir == DirectionUpDown.Up)
+        {
+            if(up != null && up.gridInEnvanter != null)
+            {
+                // ekleme sırası önemli
+                grids.Add(up.gridInEnvanter);
+                grids.Add(this.gridInEnvanter);
+                return grids;
+            }
+            return null;
+        }
+        else
+        {
+            if(down != null  && down.gridInEnvanter != null)
+            {
+                grids.Add(this.gridInEnvanter);
+                grids.Add(down.gridInEnvanter);
+                return grids;
+            }
+            return null;
+            
+        }
+    }
+
+    public bool CheckGrid3x1(Vector3 pos)
+    {
+        if(right == null || left == null)
+        {
+            return false;
+        }
+        return true;
+    }
+    public bool CheckGrid4x4(Vector3 pos)
+    {
+        Direction4 dir = GetDirection4(pos);
         if(dir == Direction4.UpLeft)
         {
             if(up != null && left != null && left.up != null)
@@ -133,9 +198,9 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         return false;
     }
-    public List<Grid> GetGrids(Vector3 pos)
+    public List<Grid> GetGrids4x4(Vector3 pos)
     {
-        Direction4 dir = GetDirection(pos);
+        Direction4 dir = GetDirection4(pos);
         List<Grid> grids = new List<Grid>();
         if(dir == Direction4.UpLeft)
         {
@@ -191,13 +256,25 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         return null;
     }
-    public static Vector3 GetCenter(List<Grid> grids)
+    public List<Grid> GetGrids3x1(Vector3 pos)
+    {
+        List<Grid> grids = new List<Grid>();
+        
+        // ekleme sırası önemli
+        grids.Add(left);
+        grids.Add(this);
+        grids.Add(right);
+        return grids;
+    }
+    public static Vector3 GetCenter(IEnumerable<Transform> grids)
     {
         Vector3 pos = Vector3.zero;
+        int i = 0;
         foreach (var item in grids)
         {
-            pos += item.transform.position;
+            pos += item.position;
+            i++;
         }
-        return pos/grids.Count;
+        return pos/i;
     }
 }

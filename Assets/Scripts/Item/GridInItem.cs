@@ -2,15 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
+public class GridInItem : MonoBehaviour,ISlotForItem
 {
-    public GridInItem slotForItem;
     public ISlotable item{get;private set;}
-    public Envanter envanter;
-    public Grid grid;
+    public GridInEnvanter gridInEnvanter;
     SpriteRenderer spriteRenderer;
     private void Start() {
-        envanter = GetComponentInParent<Envanter>();
+        item = GetComponent<ISlotable>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void OpenPutableColor()
@@ -25,21 +23,11 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     public void OnPointerEnter()
     {
         spriteRenderer.color = Color.green;
-        EnvanterSystem.Instance.selectedGridInEnvanter = this;
+        EnvanterSystem.Instance.selectedGridInItem = this;
     }
-
     public void OnPointerExit()
     {
         TriggerOnPointerExit();
-    }
-
-    public bool CheckEnvanterGrid(Vector3 pos)
-    {
-        return grid.CheckEnvanterGrid(pos);
-    }
-    public List<GridInEnvanter> GetGridsUpDown(Vector3 pos)
-    {
-        return grid.GetGridsUpDown(pos);
     }
     public bool CheckEnvanterGridAnyItem()
     {
@@ -64,6 +52,6 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     public void TriggerOnPointerExit()
     {
         spriteRenderer.color = Color.gray;
-        EnvanterSystem.Instance.selectedGridInEnvanter = null;
+        EnvanterSystem.Instance.selectedGridInItem = null;
     }
 }
