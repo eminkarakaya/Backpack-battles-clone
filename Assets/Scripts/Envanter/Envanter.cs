@@ -16,10 +16,11 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
         rotateStage%=4;
     }} 
 
-    bool isPlaced;
+    [SerializeField] bool isPlaced;
     [SerializeField] bool isSelected;
     public abstract List<Grid> GetGrids(Vector3 pos);
     public abstract bool CheckGrid(Vector3 pos);
+    public abstract GridInEnvanter[] GetChildGridsInEnvanterByRotation(int rotationIndex);
     
     private void Start() {
         childGridsInEnvanterDefault = GetComponentsInChildren<GridInEnvanter>();
@@ -78,7 +79,6 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
         }
         return false;
     }
-    public abstract GridInEnvanter[] GetChildGridsInEnvanterByRotation(int rotationIndex);
     
     Vector3 MouseWorldPosition()
     {
@@ -88,23 +88,39 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     }
 
     // buranın sırası
-    private void AssignGridInEnvantersGrids(List<Grid> grids)
+    private void AssignGridInEnvantersGrids(List<Grid> grids) // koyulacak grıdler
     {
-        
         for (int i = 0; i < childGridsInEnvanterByRotation.Length; i++)
         {
+            
             childGridsInEnvanterByRotation[i].grid = grids[i];
+            
             grids[i].gridInEnvanter = childGridsInEnvanterByRotation[i];
         }
     }
-    private void AssignGridInEnvantersGridsToNull()
+    private ISlotable [] AssignGridInEnvantersGridsToNull()
     {
+        List<ISlotable> slotables = new List<ISlotable>(); // grid
         for (int i = 0; i < childGridsInEnvanterDefault.Length; i++)
         {
+            if(childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem != null &&  childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem.item != null)
+            {
+                slotables.Add(childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem.item);
+            }
+            if(childGridsInEnvanterDefault[i].gridInItem != null && childGridsInEnvanterDefault[i].gridInItem.gridInEnvanter != null)
+            {
+                // childGridsInEnvanterDefault[i].SetItem(null);
+                childGridsInEnvanterDefault[i].gridInItem.gridInEnvanter = null;
+            }
+            childGridsInEnvanterDefault[i].gridInItem = null;
             childGridsInEnvanterDefault[i].grid.gridInEnvanter = null;
             childGridsInEnvanterDefault[i].grid = null;
+
         }
+        return slotables.ToArray();
     }
+
+    
     private void SetGridsColorToPuttingColor()
     {
         foreach (var item in childGridsInEnvanterDefault)
@@ -144,12 +160,37 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     {
         if(EnvanterSystem.Instance.selectedGrid!= null)
         {
-            // buranın sırası
+            // koyulacak grıdler sırayla
             List<Grid> grids = GetGrids(transform.position);
+
+
+            // cıkarılacak envanterler
             List<IEnvantable> envanters = CheckPlaceAnyEnvanter(grids);
-            foreach (var item in envanters)
+
+            List<ISlotable> slotables = new List<ISlotable>();
+            List<Grid> gridsEnvanter = new List<Grid>();
+            for (int i = 0; i < envanters.Count; i++)
             {
-                item.TakeOffSlotMap();
+                for (int j = 0; j < grids.Count; j++)
+                {
+                    if(grids[j].gridInEnvanter != null && !grids[j].gridInEnvanter.IsNullItem())
+                    {
+                        gridsEnvanter.Add(grids[j]);
+                        // itemi olan gridleri alıyoruz
+                    }
+                    if(grids[j].gridInEnvanter != null && grids[j].gridInEnvanter.gridInItem != null)
+                    {
+                        childGridsInEnvanterByRotation[j].gridInItem = grids[j].gridInEnvanter.gridInItem;
+                        childGridsInEnvanterByRotation[j].gridInItem.gridInEnvanter = childGridsInEnvanterByRotation[j];
+                        grids[j].gridInEnvanter.gridInItem = null;
+                    }
+                }
+                List<ISlotable> slotables1 = slotables1 = envanters[i].TakeOffSlotMap().ToList();
+                for (int j = 0; j < slotables1.Count; j++)
+                {
+                    slotables.Add(slotables1[j]);
+                }
+                // itemi olan gridlerdeki itemleri alıyoruz.
             }
             AssignGridInEnvantersGrids(grids);
             transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
@@ -157,6 +198,24 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
             OpenColliders();
             SetGridsColorToPuttingColor();
             isPlaced = true;
+            for (int i = 0; i < slotables.Count; i++)
+            {
+                if(slotables[i].GetGrids() == null)
+                {
+                    slotables[i].TakeOffSlot();
+                    
+                }
+                else
+                {
+                    foreach (var item in slotables[i].GetGrids())
+                    {
+                        if(item == null || item.gridInEnvanter == null)
+                        {
+                            slotables[i].TakeOffSlot();
+                        }
+                    }
+                }
+            }
         }
     }
     private List<IEnvantable> CheckPlaceAnyEnvanter(List<Grid> grids)
@@ -178,12 +237,13 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     {
         transform.position = Vector3.zero;
     }
-    public void TakeOffSlotMap()
+    public ISlotable[] TakeOffSlotMap()
     {        
-        AssignGridInEnvantersGridsToNull();
+        
         TakeOffPosition();
         isPlaced = false;
         CloseColliders();
+        return AssignGridInEnvantersGridsToNull();
     }
 
     public void PuttingError()

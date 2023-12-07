@@ -141,7 +141,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         return Direction4.DownRight;
     }
-    public bool CheckEnvanterGrid(Vector3 pos,byte rotateIndex)
+    public bool CheckEnvanterGrid2x1(Vector3 pos,byte rotateIndex)
     {
         DirectionUpDownRightLeft dir = GetDirectionUpDown(pos,rotateIndex);
         if(rotateIndex == 0)
@@ -226,7 +226,43 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         
     }
-    public List<GridInEnvanter> GetGridsUpDown(Vector3 pos,byte rotateIndex)
+    public bool CheckEnvanterGrid3x1(Vector3 pos,byte rotateIndex)
+    {
+        if(rotateIndex == 0)
+        {
+            if(right == null || right.gridInEnvanter == null || left == null || left.gridInEnvanter == null)
+            {
+                return false;
+            }
+            return true;
+        }
+        else if(rotateIndex == 1)
+        {
+            if(up == null || up.gridInEnvanter == null || down == null || down.gridInEnvanter == null)
+            {
+                return false;
+            }
+            return true;
+        } 
+        else if(rotateIndex == 2)
+        {
+            if(right == null || right.gridInEnvanter == null || left == null || left.gridInEnvanter == null)
+            {
+                return false;
+            }
+            return true;
+        }
+        else 
+        {
+            if(up == null || up.gridInEnvanter == null || down == null || down.gridInEnvanter == null)
+            {
+                return false;
+            }
+            return true;
+        }
+        
+    }
+    public List<GridInEnvanter> GetEnvanterGrids2x1(Vector3 pos,byte rotateIndex)
     {
         DirectionUpDownRightLeft dir = GetDirectionUpDown(pos,rotateIndex);
         List<GridInEnvanter> grids = new List<GridInEnvanter>();
@@ -239,9 +275,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(up.gridInEnvanter);
                     grids.Add(this.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
             else if(dir == DirectionUpDownRightLeft.Down)
             {
@@ -250,11 +284,8 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(this.gridInEnvanter);
                     grids.Add(down.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
-            return null;
         }
         else if(rotateIndex == 1)
         {
@@ -265,9 +296,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(left.gridInEnvanter);
                     grids.Add(this.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
             else if(dir == DirectionUpDownRightLeft.Right)
             {
@@ -276,11 +305,8 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(this.gridInEnvanter);
                     grids.Add(right.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
-            return null;
         }
         else if(rotateIndex == 2)
         {
@@ -291,9 +317,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(up.gridInEnvanter);
                     grids.Add(this.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
             else if(dir == DirectionUpDownRightLeft.Down)
             {
@@ -302,11 +326,8 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(this.gridInEnvanter);
                     grids.Add(down.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
-            return null;
         }
         else
         {
@@ -317,9 +338,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(left.gridInEnvanter);
                     grids.Add(this.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
             else if(dir == DirectionUpDownRightLeft.Right)
             {
@@ -328,15 +347,41 @@ public class Grid : MonoBehaviour , ISlotForGrid
                     // ekleme sırası önemli
                     grids.Add(this.gridInEnvanter);
                     grids.Add(right.gridInEnvanter);
-                    return grids;
                 }
-                return null;
             }
-            return null;
         }
-        
+        return grids;
     }
 
+    public List<GridInEnvanter> GetEnvanterGrids3x1(Vector3 pos,byte rotateIndex)
+    {
+        List<GridInEnvanter> grids = new List<GridInEnvanter>();
+        if(rotateIndex == 0)
+        {
+            grids.Add(left.gridInEnvanter);
+            grids.Add(this.gridInEnvanter);
+            grids.Add(right.gridInEnvanter);
+        }
+        else if(rotateIndex == 1)
+        {
+            grids.Add(up.gridInEnvanter);
+            grids.Add(this.gridInEnvanter);
+            grids.Add(down.gridInEnvanter);
+        }
+        else if(rotateIndex == 2)
+        {
+            grids.Add(right.gridInEnvanter);
+            grids.Add(this.gridInEnvanter);
+            grids.Add(left.gridInEnvanter);
+        }
+        else
+        {
+            grids.Add(down.gridInEnvanter);
+            grids.Add(this.gridInEnvanter);
+            grids.Add(up.gridInEnvanter);
+        }
+        return grids;
+    }    
     public bool CheckGrid3x1(Vector3 pos,int rotateIndex)
     {
         if(rotateIndex == 0)
@@ -418,9 +463,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                 grids.Add(up);
                 grids.Add(left);
                 grids.Add(this);
-                return grids;
             }
-            return null;
         }
         else if(dir == Direction4.UpRight)
         {
@@ -430,9 +473,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                 grids.Add(right.up);
                 grids.Add(this);
                 grids.Add(right);
-                return grids;
             }
-            return null;
             
         }
         else if(dir == Direction4.DownLeft)
@@ -443,9 +484,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
                 grids.Add(this);
                 grids.Add(left.down);
                 grids.Add(down);
-                return grids;
             }
-            return null;
             
         }
         else if(dir == Direction4.DownRight)
@@ -456,12 +495,10 @@ public class Grid : MonoBehaviour , ISlotForGrid
                 grids.Add(right);
                 grids.Add(down);
                 grids.Add(right.down);
-                return grids;
             }
-            return null;
             
         }
-        return null;
+        return grids;
     }
     public List<Grid> GetGrids3x1(Vector3 pos,int rotateIndex)
     {
@@ -471,14 +508,12 @@ public class Grid : MonoBehaviour , ISlotForGrid
             grids.Add(left);
             grids.Add(this);
             grids.Add(right);
-            return grids;
         }
         else if(rotateIndex == 1)
         {
             grids.Add(up);
             grids.Add(this);
             grids.Add(down);
-            return grids;
 
         }
         
@@ -487,7 +522,6 @@ public class Grid : MonoBehaviour , ISlotForGrid
             grids.Add(right);
             grids.Add(this);
             grids.Add(left);
-            return grids;
 
         }
         
@@ -496,9 +530,8 @@ public class Grid : MonoBehaviour , ISlotForGrid
             grids.Add(down);
             grids.Add(this);
             grids.Add(up);
-            return grids;
         }
-        
+        return grids;
         // ekleme sırası önemli
         
     }

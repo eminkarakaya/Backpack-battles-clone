@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class GridInItem : MonoBehaviour,ISlotForItem
 {
-    public ISlotable item{get;private set;}
+    public Item item;
     public GridInEnvanter gridInEnvanter;
     SpriteRenderer spriteRenderer;
     private void Start() {
-        item = GetComponent<ISlotable>();
+        item = GetComponentInParent<Item>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void OpenPutableColor()
@@ -37,7 +37,7 @@ public class GridInItem : MonoBehaviour,ISlotForItem
         }
         return true;
     }
-    public void SetItem(ISlotable item)
+    public void SetItem(Item item)
     {
         this.item = item;
     }

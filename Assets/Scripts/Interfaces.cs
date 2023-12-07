@@ -17,15 +17,17 @@ public interface IDragAndDropableBase
     public void OnTouchEnd();
     public void Select();
     public void PutInSlotMap();
-    public void TakeOffSlotMap();
 }
 public interface IEnvantable : IDragAndDropableBase
 {
     public bool IsInvolveAnyItem();
+    public ISlotable [] TakeOffSlotMap();
+
 }
 public interface IDragAndDropable : IDragAndDropableBase
 {
-    
+    public void TakeOffSlotMap();
+
 }
 
 public interface ISlotForEnvanter
@@ -77,6 +79,7 @@ public interface IInputSlotMap
 
 public interface ISlotable
 {
+    public Grid [] GetGrids();
     public void PutInSlot();
     public void TakeOffSlot();
 }
