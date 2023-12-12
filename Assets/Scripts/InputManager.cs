@@ -2,33 +2,33 @@ using UnityEngine;
 public class InputManager
 {
     ISlotForGrid slotable;
-    ISlotForGrid Slotable{get=>slotable;
-    set{
-        if(value == null && Envantable != null)
-        {
-            if(slotable != null)
-            {
-                slotable.OnPointerExit();
-                slotable = value;
-            }
-            return;
-        }
-        if(value != slotable)
-        {       
-            if(Envantable != null)
-            {
-                if(slotable != null)
-                    slotable.OnPointerExit();
-                slotable = value;
-                if(slotable != null)
-                {
-                    slotable.OnPointerEnter();
-                }
-            }
-            return;
-        }
-        slotable = value;
-    }}
+    // ISlotForGrid Slotable{get=>slotable;
+    // set{
+    //     if(value == null && Envantable != null)
+    //     {
+    //         if(slotable != null)
+    //         {
+    //             // slotable.OnPointerExit();
+    //             slotable = value;
+    //         }
+    //         return;
+    //     }
+    //     if(value != slotable)
+    //     {       
+    //         if(Envantable != null)
+    //         {
+    //             if(slotable != null)
+    //                 // slotable.OnPointerExit();
+    //             slotable = value;
+    //             if(slotable != null)
+    //             {
+    //                 // slotable.OnPointerEnter();
+    //             }
+    //         }
+    //         return;
+    //     }
+    //     slotable = value;
+    // }}
 
     ISlotForEnvanter slotForEnvanter;
     ISlotForEnvanter SlotForEnvanter{get=>slotForEnvanter;
@@ -113,7 +113,7 @@ public class InputManager
 
         // slotable
         InputEnvanterItem.UpdateTick();
-        Slotable = InputSlotMap.OnPointerSlotable(gridLayerMask);
+        // Slotable = InputSlotMap.OnPointerSlotable(gridLayerMask);
         SlotForEnvanter = InputEnvanterItem.OnPointerSlotable(envanterGridLayerMask);
         InputItem.UpdateTick();
         // OnRotate();
@@ -174,11 +174,6 @@ public class InputManager
         if(Envantable != null)
         {
             Envantable.OnTouchEnd();
-            if(Slotable != null)
-            {
-                Slotable.OnPointerExit();
-                Slotable = null;
-            }
         }
     }
     

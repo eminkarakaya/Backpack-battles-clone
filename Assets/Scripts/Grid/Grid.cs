@@ -22,12 +22,12 @@ public class Grid : MonoBehaviour , ISlotForGrid
     public void TriggerOnPointerEnter()
     {
         spriteRenderer.color = Color.green;
-        EnvanterSystem.Instance.selectedGrid = this;
+        // GridManager.Instance.selectedGrid = this;
     }
     public void TriggerOnPointerExit()
     {
         spriteRenderer.color = Color.white;
-        EnvanterSystem.Instance.selectedGrid = null;
+        // GridManager.Instance.selectedGrid = null;
     }
     public void OnPointerEnter()
     {
@@ -39,13 +39,13 @@ public class Grid : MonoBehaviour , ISlotForGrid
     }
     public void FindNeightbours()
     {
-        if(index.x == EnvanterSystem.Instance.scale.x-1)
+        if(index.x == GridManager.Instance.scale.x-1)
         {
             right = null;
         }
         else
         {
-            right = EnvanterSystem.Instance.GetGridByIndex(new Vector2Int(index.x + 1,index.y));
+            right = GridManager.Instance.GetGridByIndex(new Vector2Int(index.x + 1,index.y));
         }
         if(index.x == 0)
         {
@@ -53,7 +53,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         else
         {
-            left = EnvanterSystem.Instance.GetGridByIndex(new Vector2Int(index.x - 1,index.y));
+            left = GridManager.Instance.GetGridByIndex(new Vector2Int(index.x - 1,index.y));
         }
         if(index.y == 0)
         {
@@ -61,15 +61,15 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         else
         {
-            up = EnvanterSystem.Instance.GetGridByIndex(new Vector2Int(index.x ,index.y - 1));
+            up = GridManager.Instance.GetGridByIndex(new Vector2Int(index.x ,index.y - 1));
         }
-        if(index.y == EnvanterSystem.Instance.scale.y-1)
+        if(index.y == GridManager.Instance.scale.y-1)
         {
             down = null;
         }
         else
         {
-            down = EnvanterSystem.Instance.GetGridByIndex(new Vector2Int(index.x ,index.y + 1));
+            down = GridManager.Instance.GetGridByIndex(new Vector2Int(index.x ,index.y + 1));
         }
     }
     public DirectionUpDownRightLeft GetDirectionUpDown(Vector3 pos,byte rotateIndex)
@@ -546,4 +546,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         return pos/i;
     }
+
+    
+
 }

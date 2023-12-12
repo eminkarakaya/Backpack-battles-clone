@@ -3,10 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-public abstract class Envanter : MonoBehaviour, IEnvantable
+public class Envanter : MonoBehaviour, IEnvantable
 {
+    [SerializeField] private SubGrid [] subGrids;
     protected GridInEnvanter [] childGridsInEnvanterDefault; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
-    GridInEnvanter [] childGridsInEnvanterByRotation;
     SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject outline;
     [SerializeField] private byte rotateStage;
@@ -18,37 +18,27 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
 
     [SerializeField] bool isPlaced;
     [SerializeField] bool isSelected;
-    public abstract List<Grid> GetGrids(Vector3 pos);
-    public abstract bool CheckGrid(Vector3 pos);
-    public abstract GridInEnvanter[] GetChildGridsInEnvanterByRotation(int rotationIndex);
-    
     private void Start() {
+        subGrids = GetComponentsInChildren<SubGrid>();
         childGridsInEnvanterDefault = GetComponentsInChildren<GridInEnvanter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
-        childGridsInEnvanterByRotation = childGridsInEnvanterDefault;
     }
 
     public void OnDrag()
     {
         if(!isSelected) return;
         transform.position = MouseWorldPosition();
-        if(EnvanterSystem.Instance.selectedGrid!=null && CheckGrid(transform.position))
+        foreach (var item in subGrids)
         {
-            OpenPutableColorChilds();
-        }
-        else
-        {
-            ClosePutableColorChilds();
+            item.CastRay(InputManagerMono.Instance.layermaskGrid);
         }
     }
     public void OnTouchEnd()
     {
-        if(EnvanterSystem.Instance.selectedGrid!=null) 
+        
+        if(CheckGrid())
         {
-            if(CheckGrid(transform.position))
-            {
-                PutInSlotMap();
-            }
+            PutInSlotMap();
         }
         if(outline != null) 
             outline.SetActive(false);
@@ -90,12 +80,12 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     // buranın sırası
     private void AssignGridInEnvantersGrids(List<Grid> grids) // koyulacak grıdler
     {
-        for (int i = 0; i < childGridsInEnvanterByRotation.Length; i++)
+        for (int i = 0; i < childGridsInEnvanterDefault.Length; i++)
         {
             
-            childGridsInEnvanterByRotation[i].grid = grids[i];
+            childGridsInEnvanterDefault[i].grid = grids[i];
             
-            grids[i].gridInEnvanter = childGridsInEnvanterByRotation[i];
+            grids[i].gridInEnvanter = childGridsInEnvanterDefault[i];
         }
     }
     private ISlotable [] AssignGridInEnvantersGridsToNull()
@@ -128,20 +118,20 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
             item.ClosePutableColor();
         }
     }
-    private void OpenColliders()
-    {
-        foreach (var item in childGridsInEnvanterDefault)
-        {
-            item.GetComponent<Collider2D>().enabled = true;
-        }
-    }
-    private void CloseColliders()
-    {
-        foreach (var item in childGridsInEnvanterDefault)
-        {
-            item.GetComponent<Collider2D>().enabled = false;
-        }
-    }
+    // private void OpenColliders()
+    // {
+    //     foreach (var item in childGridsInEnvanterDefault)
+    //     {
+    //         item.GetComponent<Collider2D>().enabled = true;
+    //     }
+    // }
+    // private void CloseColliders()
+    // {
+    //     foreach (var item in childGridsInEnvanterDefault)
+    //     {
+    //         item.GetComponent<Collider2D>().enabled = false;
+    //     }
+    // }
     private void OpenPutableColorChilds()
     {
         foreach (var item in childGridsInEnvanterDefault)
@@ -156,63 +146,90 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
             item.ClosePutableColor();
         }
     }
+    private bool CheckGrid()
+    {
+        foreach (var item in subGrids)
+        {
+            if(!item.CheckGrid(InputManagerMono.Instance.layermaskGrid))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+    private List<Grid> GetGrids()
+    {   
+        List<Grid> grids = new List<Grid>();
+        foreach (var item in subGrids)
+        {
+            grids.Add(item.slot);
+        }
+        return grids;
+    }
     public void PutInSlotMap()
     {
-        if(EnvanterSystem.Instance.selectedGrid!= null)
+        // koyulacak grıdler sırayla
+        List<Grid> grids = GetGrids();
+
+
+        // cıkarılacak envanterler
+        List<IEnvantable> envanters = CheckPlaceAnyEnvanter(grids);
+
+        List<ISlotable> slotables = new List<ISlotable>();
+        List<Grid> gridsEnvanter = new List<Grid>();
+        for (int i = 0; i < envanters.Count; i++)
         {
-            // koyulacak grıdler sırayla
-            List<Grid> grids = GetGrids(transform.position);
+            
+            // cıkarılan envanterlerın bulundugu grıdlerın 
+         
 
 
-            // cıkarılacak envanterler
-            List<IEnvantable> envanters = CheckPlaceAnyEnvanter(grids);
 
-            List<ISlotable> slotables = new List<ISlotable>();
-            List<Grid> gridsEnvanter = new List<Grid>();
-            for (int i = 0; i < envanters.Count; i++)
+            for (int j = 0; j < grids.Count; j++)
             {
-                for (int j = 0; j < grids.Count; j++)
+                if(grids[j].gridInEnvanter != null && !grids[j].gridInEnvanter.IsNullItem())
                 {
-                    if(grids[j].gridInEnvanter != null && !grids[j].gridInEnvanter.IsNullItem())
-                    {
-                        gridsEnvanter.Add(grids[j]);
-                        // itemi olan gridleri alıyoruz
-                    }
-                    if(grids[j].gridInEnvanter != null && grids[j].gridInEnvanter.gridInItem != null)
-                    {
-                        childGridsInEnvanterByRotation[j].gridInItem = grids[j].gridInEnvanter.gridInItem;
-                        childGridsInEnvanterByRotation[j].gridInItem.gridInEnvanter = childGridsInEnvanterByRotation[j];
-                        grids[j].gridInEnvanter.gridInItem = null;
-                    }
+                    gridsEnvanter.Add(grids[j]);
+                    // itemi olan gridleri alıyoruz
                 }
-                List<ISlotable> slotables1 = slotables1 = envanters[i].TakeOffSlotMap().ToList();
-                for (int j = 0; j < slotables1.Count; j++)
+                if(grids[j].gridInEnvanter != null && grids[j].gridInEnvanter.gridInItem != null)
                 {
-                    slotables.Add(slotables1[j]);
+                    childGridsInEnvanterDefault[j].gridInItem = grids[j].gridInEnvanter.gridInItem;
+                    childGridsInEnvanterDefault[j].gridInItem.gridInEnvanter = childGridsInEnvanterDefault[j];
+                    grids[j].gridInEnvanter.gridInItem = null;
                 }
-                // itemi olan gridlerdeki itemleri alıyoruz.
             }
-            AssignGridInEnvantersGrids(grids);
-            transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
-            EnvanterSystem.Instance.selectedGrid.TriggerOnPointerExit();
-            OpenColliders();
-            SetGridsColorToPuttingColor();
-            isPlaced = true;
-            for (int i = 0; i < slotables.Count; i++)
+            List<ISlotable> slotables1 = slotables1 = envanters[i].TakeOffSlotMap().ToList();
+            for (int j = 0; j < slotables1.Count; j++)
             {
-                if(slotables[i].GetGrids() == null)
+                slotables.Add(slotables1[j]);
+            }
+            // itemi olan gridlerdeki itemleri alıyoruz.
+        }
+        AssignGridInEnvantersGrids(grids);
+        transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
+        foreach (var item in childGridsInEnvanterDefault)
+        {
+            item.grid.TriggerOnPointerExit();
+        }
+        // GridManager.Instance.selectedGrid.TriggerOnPointerExit();
+        // OpenColliders();
+        SetGridsColorToPuttingColor();
+        isPlaced = true;
+        for (int i = 0; i < slotables.Count; i++)
+        {
+            if(slotables[i].GetGrids() == null)
+            {
+                slotables[i].TakeOffSlot();
+                
+            }
+            else
+            {
+                foreach (var item in slotables[i].GetGrids())
                 {
-                    slotables[i].TakeOffSlot();
-                    
-                }
-                else
-                {
-                    foreach (var item in slotables[i].GetGrids())
+                    if(item == null || item.gridInEnvanter == null)
                     {
-                        if(item == null || item.gridInEnvanter == null)
-                        {
-                            slotables[i].TakeOffSlot();
-                        }
+                        slotables[i].TakeOffSlot();
                     }
                 }
             }
@@ -239,10 +256,13 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     }
     public ISlotable[] TakeOffSlotMap()
     {        
-        
+        foreach (var item in childGridsInEnvanterDefault)
+        {
+            item.ClosePutableColor();
+        }
         TakeOffPosition();
         isPlaced = false;
-        CloseColliders();
+        // CloseColliders();
         return AssignGridInEnvantersGridsToNull();
     }
 
@@ -253,14 +273,12 @@ public abstract class Envanter : MonoBehaviour, IEnvantable
     public void RotateCounterClockwise90Degree()
     {
         RotateStage --;
-        childGridsInEnvanterByRotation = GetChildGridsInEnvanterByRotation(rotateStage);
         RotateCounterClockwiseAnimation();
     }
 
     public void RotateClockwise90Degree()
     {
         RotateStage ++;
-        childGridsInEnvanterByRotation = GetChildGridsInEnvanterByRotation(rotateStage);
         Rotate90ClockwiseAnimation();
     }
     private void Rotate90ClockwiseAnimation()

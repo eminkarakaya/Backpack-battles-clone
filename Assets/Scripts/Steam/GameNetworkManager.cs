@@ -14,6 +14,9 @@ public class GameNetworkManager : MonoBehaviour
     private FacepunchTransport facepunchTransport;
     public Lobby? currentLobby{get;private set;} = null;
     public ulong hostId;
+    #region Unity Callbacks
+
+        
     private void Awake() {
         if(instance == null)
         {
@@ -54,6 +57,10 @@ public class GameNetworkManager : MonoBehaviour
     private void OnApplicationQuit() {
         Disconnected();
     }
+    #endregion
+
+    #region Steam Callbacks
+        
     // when you accept the invite or join on a friend
     private async void SteamFriends_OnGameLobbyJoinRequested(Lobby _lobby, SteamId _steamId)
     {
@@ -113,7 +120,11 @@ public class GameNetworkManager : MonoBehaviour
         }
         StartClient(currentLobby.Value.Owner.Id);
     }
+    #endregion
 
+    #region Netcode Callbacks
+
+        
     public async void StartHost(int maxMembers)
     {
         NetworkManager.Singleton.OnServerStarted += Singleton_OnServerStarted;
@@ -174,6 +185,8 @@ public class GameNetworkManager : MonoBehaviour
         GameManager.instance.Disconnected();
         Debug.Log("disconnected");
     }
+    #endregion
+
     private Texture2D GetSteamImageAsTexture(int iImage)
     {
         Texture2D texture2D = null;

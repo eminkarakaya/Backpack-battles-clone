@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnvanterSystem : Singleton<EnvanterSystem>
+public class GridManager : Singleton<GridManager>
 {
     [SerializeField] Vector2 offsetMultiplier;
     [SerializeField] private Grid _gridPrefab;

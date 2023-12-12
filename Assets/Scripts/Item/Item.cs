@@ -5,88 +5,79 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public abstract class Item : MonoBehaviour, IDragAndDropable ,ISlotable
+public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
 {
-    
+    [SerializeField] private SubGrid [] subGrids;
+    [SerializeField] private GameObject scaledGameObject;
+    private float scaleMultiplier = 1.1f;
     [SerializeField] protected GridInItem []  gridsInItemDefault;
-    public GridInItem []  gridsInItemRotate;
     [SerializeField] private byte rotateStage;
+    [SerializeField] SpriteRenderer[] childSpriteRenderers;
     public byte RotateStage { get => rotateStage; set
     {
         rotateStage = value;
         rotateStage%=4;
     }} 
 
-    [SerializeField] private GameObject outline;
+    // [SerializeField] private GameObject outline;
     private bool isPlaced;
-    public abstract List<GridInEnvanter> GetGrids(Vector3 pos);
-    public abstract bool CheckGrid(Vector3 pos);
-    public abstract GridInItem[] GetChildGridsInEnvanterByRotation(int rotationIndex);
+    public List<GridInEnvanter> GetGridInEnvanters()
+    {
+        List<Grid> grids = new List<Grid>();
+        foreach (var item in subGrids)
+        {
+            grids.Add(item.slot);
+        }
+        return grids.Select(x=>x.gridInEnvanter).ToList();
+    }
+    public bool CheckGrid()
+    {
+        foreach (var item in subGrids)
+        {
+            if(!item.CheckEnvanterGrid(InputManagerMono.Instance.layermaskGrid))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
     private void Start() {
-        gridsInItemRotate = gridsInItemDefault ;
+        subGrids =  GetComponentsInChildren<SubGrid>();
+        childSpriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
-    Vector3 MouseWorldPosition()
-    {
-        var mouseScreenPos = Input.mousePosition;
-        mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
-        return Camera.main.ScreenToWorldPoint(mouseScreenPos);
-    }
-    private void OpenPutableColorChilds()
-    {
-        foreach (var item in gridsInItemDefault)
-        {
-            item.OpenPutableColor();
-        }
-    }
-    private void ClosePutableColorChilds()
-    {
-        foreach (var item in gridsInItemDefault)
-        {
-            item.ClosePutableColor();
-        }
-    }
-    private void SetGridsColorToPuttingColor()
-    {
-        foreach (var item in gridsInItemDefault)
-        {
-            item.ClosePutableColor();
-        }
-    }
+   
     public void OnDrag()
     {
         transform.position = MouseWorldPosition();
-        if(EnvanterSystem.Instance.selectedGridInEnvanter !=null && CheckGrid(transform.position))
+        foreach (var item in subGrids)
         {
-            OpenPutableColorChilds();
-        }
-        else
-        {
-            ClosePutableColorChilds();
+            item.CastRay(InputManagerMono.Instance.layermaskGrid);
         }
     }
 
     public void OnTouchEnd()
     {
-        if(EnvanterSystem.Instance.selectedGridInEnvanter != null)
+        if(CheckGrid())
         {
-            if(CheckGrid(transform.position))
-            {
-                PutInSlot();
-            }
+            PutInSlot();
         }
-        outline.SetActive(false);
-        EnvanterSystem.Instance.selectedItem = null;
+        SpriteOrderDefault();
+        ScaleDefault();
+        // outline.SetActive(false);
+        GridManager.Instance.selectedItem = null;
     }
 
     public void Select()
     {
-        outline.SetActive(true);
+        // outline.SetActive(true);
         if(isPlaced)
         {
             AssignGridInEnvantersGridsToNull();
         }
+        ScaleIncrease();
+        SpriteOrderMax();
         isPlaced = false;
-        EnvanterSystem.Instance.selectedItem = this;
+        GridManager.Instance.selectedItem = this;
     }
     private bool CheckAnyItem()
     {
@@ -99,31 +90,34 @@ public abstract class Item : MonoBehaviour, IDragAndDropable ,ISlotable
     }
     public void PutInSlot()
     {
-        if(EnvanterSystem.Instance.selectedGridInEnvanter != null)
-        {
-            List<GridInEnvanter> grids = GetGrids(transform.position);
-            List<ISlotable> slotables = CheckPlaceAnyEnvanterGrid(grids);
+        List<GridInEnvanter> grids = GetGridInEnvanters();
+        List<ISlotable> slotables = CheckPlaceAnyEnvanterGrid(grids);
 
-            foreach (var slotable in slotables)
-            {
-                slotable.TakeOffSlot();
-            }
-            AssignGridInEnvantersGrids(grids);
-            transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
-            EnvanterSystem.Instance.selectedGridInEnvanter.TriggerOnPointerExit();
-            isPlaced = true;
+        foreach (var slotable in slotables)
+        {
+            slotable.TakeOffSlot();
         }
+        AssignGridInEnvantersGrids(grids);
+        transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
+        foreach (var item in gridsInItemDefault)
+        {
+            item.gridInEnvanter.ClosePutableColor();
+        }
+        // GridManager.Instance.selectedGridInEnvanter.TriggerOnPointerExit();
+        isPlaced = true;
+        ClosePutableColorChilds();
+        
     }
     private void AssignGridInEnvantersGrids(List<GridInEnvanter> grids)
     {
-        for (int i = 0; i < gridsInItemRotate.Length; i++)
+        for (int i = 0; i < gridsInItemDefault.Length; i++)
         {
-            gridsInItemRotate[i].gridInEnvanter = grids[i];
-            if(gridsInItemRotate[i].gridInEnvanter != null)
+            gridsInItemDefault[i].gridInEnvanter = grids[i];
+            if(gridsInItemDefault[i].gridInEnvanter != null)
             {
-                gridsInItemRotate[i].gridInEnvanter.SetItem(this);
+                gridsInItemDefault[i].gridInEnvanter.SetItem(this);
             }
-            grids[i].gridInItem = gridsInItemRotate[i];
+            grids[i].gridInItem = gridsInItemDefault[i];
         }
     }
     private List<ISlotable> CheckPlaceAnyEnvanterGrid(List<GridInEnvanter> grids)
@@ -185,14 +179,12 @@ public abstract class Item : MonoBehaviour, IDragAndDropable ,ISlotable
     public void RotateCounterClockwise90Degree()
     {
         RotateStage --;
-        gridsInItemRotate = GetChildGridsInEnvanterByRotation(rotateStage);
         RotateCounterClockwiseAnimation();
     }
 
     public void RotateClockwise90Degree()
     {
         RotateStage ++;
-        gridsInItemRotate = GetChildGridsInEnvanterByRotation(rotateStage);
         Rotate90ClockwiseAnimation();
     }
     private void Rotate90ClockwiseAnimation()
@@ -206,14 +198,64 @@ public abstract class Item : MonoBehaviour, IDragAndDropable ,ISlotable
 
     public Grid[] GetGrids()
     {
-        Grid [] grids = new Grid[gridsInItemRotate.Length];
-        foreach (var item in gridsInItemRotate)
+        Grid [] grids = new Grid[gridsInItemDefault.Length];
+        foreach (var item in gridsInItemDefault)
         {
             if(item.gridInEnvanter == null)
             {
                 return null;
             }
         }
-        return gridsInItemRotate.Select(x=>x.gridInEnvanter.grid).ToArray();
+        return gridsInItemDefault.Select(x=>x.gridInEnvanter.grid).ToArray();
+    }
+    private void SpriteOrderMax()
+    {
+        for (int i = 0; i < childSpriteRenderers.Length; i++)
+        {
+            childSpriteRenderers[i].sortingLayerID = SortingLayer.NameToID(ItemManager.Instance.itemSelectedLayer);
+        }
+        
+    }
+    private void SpriteOrderDefault()
+    {
+        for (int i = 0; i < childSpriteRenderers.Length; i++)
+        {
+            childSpriteRenderers[i].sortingLayerID = SortingLayer.NameToID(ItemManager.Instance.itemDefaultLayer);
+        }
+    }
+    private void ScaleIncrease()
+    {
+        scaledGameObject.transform.localScale = Vector3.one*scaleMultiplier;
+    }
+    private void ScaleDefault()
+    {
+        scaledGameObject.transform.localScale = Vector3.one;
+    }
+    Vector3 MouseWorldPosition()
+    {
+        var mouseScreenPos = Input.mousePosition;
+        mouseScreenPos.z = Camera.main.WorldToScreenPoint(transform.position).z;
+        return Camera.main.ScreenToWorldPoint(mouseScreenPos);
+    }
+    private void OpenPutableColorChilds()
+    {
+        foreach (var item in gridsInItemDefault)
+        {
+            item.OpenPutableColor();
+        }
+    }
+    private void ClosePutableColorChilds()
+    {
+        foreach (var item in gridsInItemDefault)
+        {
+            item.ClosePutableColor();
+        }
+    }
+    private void SetGridsColorToPuttingColor()
+    {
+        foreach (var item in gridsInItemDefault)
+        {
+            item.ClosePutableColor();
+        }
     }
 }

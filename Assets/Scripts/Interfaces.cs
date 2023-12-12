@@ -30,20 +30,23 @@ public interface IDragAndDropable : IDragAndDropableBase
 
 }
 
-public interface ISlotForEnvanter
+public interface ISlot
 {
     public void OnPointerExit();
     public void OnPointerEnter();
 }
-public interface ISlotForItem
+
+public interface ISlotForEnvanter :ISlot
 {
-    public void OnPointerExit();
-    public void OnPointerEnter();
+   
 }
-public interface ISlotForGrid
+public interface ISlotForItem:ISlot
 {
-    public void OnPointerExit();
-    public void OnPointerEnter();
+   
+}
+public interface ISlotForGrid:ISlot
+{
+   
 }
 
 
@@ -75,7 +78,11 @@ public interface IInputSlotMap
 
 
 
-
+public interface OnPointerAlertable
+{
+    public void OpenAlert();
+    public void CloseAlert();
+}
 
 public interface ISlotable
 {

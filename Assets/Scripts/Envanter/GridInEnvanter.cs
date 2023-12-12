@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
+public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter 
 {
     public GridInItem gridInItem;
     // public Item item;
@@ -24,12 +24,13 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     
     public void OnPointerEnter()
     {
-        spriteRenderer.color = Color.green;
-        EnvanterSystem.Instance.selectedGridInEnvanter = this;
+        OpenPutableColor();
+        GridManager.Instance.selectedGridInEnvanter = this;
     }
 
     public void OnPointerExit()
     {
+        ClosePutableColor();
         TriggerOnPointerExit();
     }
     public bool CheckEnvanterGrid3x1(Vector3 pos, byte rotateStage)
@@ -84,8 +85,8 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     }
     public void TriggerOnPointerExit()
     {
-        spriteRenderer.color = Color.gray;
-        EnvanterSystem.Instance.selectedGridInEnvanter = null;
+        // spriteRenderer.color = Color.gray;
+        GridManager.Instance.selectedGridInEnvanter = null;
     }
     
 }
