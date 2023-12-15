@@ -26,26 +26,6 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
         this.OnTouchEnd = OnTouchEnd;
         this.OnTouching = OnTouching;
     }
-    /// <summary>
-    /// parametredeki layere sahıp herhangi bir objeye değiyor mu
-    /// </summary>
-    /// <param name="layerMask"></param>
-    /// <returns></returns>
-    public bool CheckClickable(int layerMask)   
-    {
-        if(Input.GetMouseButtonDown(0))
-        {
-            RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
-            if(hit.collider == null) return false;
-            if(hit.collider.TryGetComponent(out envantable))
-            {
-                if(!envantable.IsInvolveAnyItem()) // eger envanterde herhangı bı ıtem varsa secemıyorz.
-                    return true;
-            }
-        }
-        return false;
-    }
-
     public IEnvantable SelectClickable(int layerMask)
     {
         RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
@@ -91,6 +71,30 @@ public class CastRayClassForEnvanterItem : IInputEnvanterItem
         }
         return null;
     }
+
+    public bool CheckInput()
+    {
+        return Input.GetMouseButtonDown(0);
+    }
+
+    public bool CheckClickable(int layerMask, out IEnvantable envantable1)
+    {
+        RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
+        if(hit.collider == null)
+        {
+            envantable1 = null;
+            return false;
+        } 
+        if(hit.collider.TryGetComponent(out envantable))
+        {
+            
+            envantable1 = envantable;
+            return true;
+             // eger envanterde herhangı bı ıtem varsa secemıyorz.
+        }
+        envantable1 = null;
+        return false;
+    }
 }
 public class CastRayClassForItem : IInputItem
 {
@@ -128,18 +132,24 @@ public class CastRayClassForItem : IInputItem
     
         return null;
     }
-    public bool CheckClickable(int layerMask)
+    public bool CheckInput()
     {
-        if(Input.GetMouseButtonDown(0))
+        return Input.GetMouseButtonDown(0);
+    }
+    public bool CheckClickable(int layerMask,out IDragAndDropable dragAndDropable)
+    {
+        RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
+        if(hit.collider == null) 
         {
-            RaycastHit2D hit = Utils.CastRay(Input.mousePosition,layerMask);
-            if(hit.collider == null) return false;
-            if(hit.collider.TryGetComponent(out clickable))
-            {
-                
-                return true;
-            }
+            dragAndDropable = null;
+            return false;
         }
+        if(hit.collider.TryGetComponent(out clickable))
+        {    
+            dragAndDropable = clickable;
+            return true;
+        }
+        dragAndDropable = null;
         return false;
     }
     public void UpdateTick()

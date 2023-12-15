@@ -20,12 +20,11 @@ public class GridInItem : MonoBehaviour,ISlotForItem
         spriteRenderer.color = Color.gray;
     }
     
-    public void OnPointerEnter()
+    public void OnPointerEnterWhileSelectedObject()
     {
         spriteRenderer.color = Color.green;
-        GridManager.Instance.selectedGridInItem = this;
     }
-    public void OnPointerExit()
+    public void OnPointerExitWhileSelectedObject()
     {
         TriggerOnPointerExit();
     }
@@ -52,6 +51,5 @@ public class GridInItem : MonoBehaviour,ISlotForItem
     public void TriggerOnPointerExit()
     {
         spriteRenderer.color = Color.gray;
-        GridManager.Instance.selectedGridInItem = null;
     }
 }

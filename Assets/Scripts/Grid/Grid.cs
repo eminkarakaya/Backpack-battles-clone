@@ -6,6 +6,7 @@ using UnityEngine.EventSystems;
 
 public class Grid : MonoBehaviour , ISlotForGrid
 {
+    [SerializeField] private GameObject neighbourTriggerObj;
     public GridInEnvanter gridInEnvanter;
     public Grid right;
     public Grid left;
@@ -19,6 +20,14 @@ public class Grid : MonoBehaviour , ISlotForGrid
         spriteRenderer = GetComponent<SpriteRenderer>();
         FindNeightbours();
     }
+    public void OpenNeighbourTrigger()
+    {
+        neighbourTriggerObj.SetActive(true);
+    }
+    public void CloseNeighbourTrigger()
+    {
+        neighbourTriggerObj.SetActive(false);
+    }
     public void TriggerOnPointerEnter()
     {
         spriteRenderer.color = Color.green;
@@ -29,11 +38,11 @@ public class Grid : MonoBehaviour , ISlotForGrid
         spriteRenderer.color = Color.white;
         // GridManager.Instance.selectedGrid = null;
     }
-    public void OnPointerEnter()
+    public void OnPointerEnterWhileSelectedObject()
     {
         TriggerOnPointerEnter();
     }
-    public void OnPointerExit()
+    public void OnPointerExitWhileSelectedObject()
     {
         TriggerOnPointerExit();
     }

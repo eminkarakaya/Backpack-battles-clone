@@ -7,7 +7,8 @@ using UnityEngine.EventSystems;
 
 public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
 {
-    [SerializeField] private SubGrid [] subGrids;
+    [SerializeField] private SubGridPutting [] subGridsPutting;
+    [SerializeField] private SubGridNeighbour [] subGridsNeighbour;
     [SerializeField] private GameObject scaledGameObject;
     private float scaleMultiplier = 1.1f;
     [SerializeField] protected GridInItem []  gridsInItemDefault;
@@ -24,15 +25,15 @@ public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
     public List<GridInEnvanter> GetGridInEnvanters()
     {
         List<Grid> grids = new List<Grid>();
-        foreach (var item in subGrids)
+        foreach (var item in subGridsPutting)
         {
-            grids.Add(item.slot);
+            grids.Add(item.slot);            
         }
         return grids.Select(x=>x.gridInEnvanter).ToList();
     }
     public bool CheckGrid()
     {
-        foreach (var item in subGrids)
+        foreach (var item in subGridsPutting)
         {
             if(!item.CheckEnvanterGrid(InputManagerMono.Instance.layermaskGrid))
             {
@@ -42,14 +43,19 @@ public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
         return true;
     }
     private void Start() {
-        subGrids =  GetComponentsInChildren<SubGrid>();
+        subGridsPutting =  GetComponentsInChildren<SubGridPutting>();
+        subGridsNeighbour =  GetComponentsInChildren<SubGridNeighbour>();
         childSpriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
    
     public void OnDrag()
     {
         transform.position = MouseWorldPosition();
-        foreach (var item in subGrids)
+        foreach (var item in subGridsPutting)
+        {
+            item.CastRay(InputManagerMono.Instance.layermaskGrid);
+        }
+        foreach (var item in subGridsNeighbour)
         {
             item.CastRay(InputManagerMono.Instance.layermaskGrid);
         }
@@ -64,7 +70,6 @@ public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
         SpriteOrderDefault();
         ScaleDefault();
         // outline.SetActive(false);
-        GridManager.Instance.selectedItem = null;
     }
 
     public void Select()
@@ -77,7 +82,6 @@ public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
         ScaleIncrease();
         SpriteOrderMax();
         isPlaced = false;
-        GridManager.Instance.selectedItem = this;
     }
     private bool CheckAnyItem()
     {
@@ -106,6 +110,11 @@ public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
         // GridManager.Instance.selectedGridInEnvanter.TriggerOnPointerExit();
         isPlaced = true;
         ClosePutableColorChilds();
+        // foreach (var item in subGridsNeighbour)
+        // {
+        //     if(item.slot != null)
+        //         item.slot.CloseNeighbourTrigger();
+        // }
         
     }
     private void AssignGridInEnvantersGrids(List<GridInEnvanter> grids)
@@ -257,5 +266,36 @@ public class Item : MonoBehaviour, IDragAndDropable ,ISlotable
         {
             item.ClosePutableColor();
         }
+    }
+    private void OpenNeighbourTrigger()
+    {
+        foreach (var item in subGridsNeighbour)
+        {
+            if(item.slot != null)
+            {
+                item.slot.OpenNeighbourTrigger();
+            }
+        }
+    }
+    private void CloseNeighbourTrigger()
+    {
+        foreach (var item in subGridsNeighbour)
+        {
+            if(item.slot != null)
+            {
+                item.slot.CloseNeighbourTrigger();
+            }
+        }
+
+    }
+
+    public void OnPointerEnter()
+    {
+        OpenNeighbourTrigger();
+    }
+
+    public void OnPointerExit()
+    {
+        CloseNeighbourTrigger();
     }
 }

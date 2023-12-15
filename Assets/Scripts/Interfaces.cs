@@ -17,6 +17,9 @@ public interface IDragAndDropableBase
     public void OnTouchEnd();
     public void Select();
     public void PutInSlotMap();
+    public void OnPointerEnter();
+    public void OnPointerExit();
+
 }
 public interface IEnvantable : IDragAndDropableBase
 {
@@ -27,13 +30,12 @@ public interface IEnvantable : IDragAndDropableBase
 public interface IDragAndDropable : IDragAndDropableBase
 {
     public void TakeOffSlotMap();
-
 }
 
 public interface ISlot
 {
-    public void OnPointerExit();
-    public void OnPointerEnter();
+    public void OnPointerExitWhileSelectedObject();
+    public void OnPointerEnterWhileSelectedObject();
 }
 
 public interface ISlotForEnvanter :ISlot
@@ -53,17 +55,20 @@ public interface ISlotForGrid:ISlot
 // Inputs
 public interface IInputItem
 {
+    public bool CheckInput();
     public IDragAndDropable SelectClickable(int layerMask);
     public bool UnSelectClickable();
     public void UpdateTick();
-    public bool CheckClickable(int layerMask);
+    public bool CheckClickable(int layerMask,out IDragAndDropable dragAndDropable);
 }
 public interface IInputEnvanterItem
 {
+    
+    public bool CheckInput();
     public IEnvantable SelectClickable(int layerMask);
     public bool UnSelectClickable();
     public void UpdateTick();
-    public bool CheckClickable(int layerMask);
+    public bool CheckClickable(int layerMask,out IEnvantable envantable);
     public ISlotForEnvanter OnPointerSlotable(int layerMask);
 
 }

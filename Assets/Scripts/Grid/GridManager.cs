@@ -10,10 +10,6 @@ public class GridManager : Singleton<GridManager>
     [SerializeField] private List<Grid> allGrids;
     public Vector3Int scale;
     [SerializeField] private Vector2 _startPos;
-    public Grid selectedGrid;
-    public GridInEnvanter selectedGridInEnvanter;
-    public GridInItem selectedGridInItem;
-    public IDragAndDropable selectedItem;
     private void Awake() {
         CreateGrids();
     }

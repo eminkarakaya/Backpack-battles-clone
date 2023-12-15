@@ -31,7 +31,7 @@ public class SubGrid : MonoBehaviour
         }
         return false;
     }
-    public Grid CastRay(int layerMask)
+    public virtual Grid CastRay(int layerMask)
     {
         Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
         RaycastHit2D hit = Utils.CastRay(new Vector3(pos.x,pos.y,0),layerMask);
@@ -39,13 +39,12 @@ public class SubGrid : MonoBehaviour
         {
             if(slot != null)
             {
-                
                 if(slot.gridInEnvanter != null)
                 {
-                    slot.gridInEnvanter.OnPointerExit();
+                    slot.gridInEnvanter.OnPointerExitWhileSelectedObject();
                 }
                 else
-                    slot.OnPointerExit();
+                    slot.OnPointerExitWhileSelectedObject();
                 slot = null;
             }
             return null;
@@ -56,11 +55,11 @@ public class SubGrid : MonoBehaviour
             {
                 if(slot.gridInEnvanter != null)
                 {
-                    slot.gridInEnvanter.OnPointerExit();
+                    slot.gridInEnvanter.OnPointerExitWhileSelectedObject();
                 }
                 else
                 {
-                    slot.OnPointerExit();
+                    slot.OnPointerExitWhileSelectedObject();
                 }
             }
             else if(grid != slot)
@@ -69,32 +68,32 @@ public class SubGrid : MonoBehaviour
                 {
                     if(slot.gridInEnvanter != null)
                     {
-                        slot.gridInEnvanter.OnPointerExit();
+                        slot.gridInEnvanter.OnPointerExitWhileSelectedObject();
                     }
                     else
                     {
-                        slot.OnPointerExit();
+                        slot.OnPointerExitWhileSelectedObject();
                     }
                 }
                 if(grid != null)
                 {
                     if(grid.gridInEnvanter != null)
                     {
-                        grid.gridInEnvanter.OnPointerEnter();
+                        grid.gridInEnvanter.OnPointerEnterWhileSelectedObject();
                     }
                     else
                     {
-                        grid.OnPointerEnter();
+                        grid.OnPointerEnterWhileSelectedObject();
                     }
                 }
             }
             slot = grid;
             if(grid.gridInEnvanter != null)
             {
-                grid.gridInEnvanter.OnPointerEnter();
+                grid.gridInEnvanter.OnPointerEnterWhileSelectedObject();
             }
             else
-                grid.OnPointerEnter();
+                grid.OnPointerEnterWhileSelectedObject();
             return grid;
         }
 

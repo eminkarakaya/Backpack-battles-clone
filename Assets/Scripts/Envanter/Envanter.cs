@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Envanter : MonoBehaviour, IEnvantable
 {
-    [SerializeField] private SubGrid [] subGrids;
+    [SerializeField] private SubGridPutting [] subGrids;
     protected GridInEnvanter [] childGridsInEnvanterDefault; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
     SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject outline;
@@ -17,16 +17,14 @@ public class Envanter : MonoBehaviour, IEnvantable
     }} 
 
     [SerializeField] bool isPlaced;
-    [SerializeField] bool isSelected;
     private void Start() {
-        subGrids = GetComponentsInChildren<SubGrid>();
+        subGrids = GetComponentsInChildren<SubGridPutting>();
         childGridsInEnvanterDefault = GetComponentsInChildren<GridInEnvanter>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
 
     public void OnDrag()
     {
-        if(!isSelected) return;
         transform.position = MouseWorldPosition();
         foreach (var item in subGrids)
         {
@@ -40,9 +38,6 @@ public class Envanter : MonoBehaviour, IEnvantable
         {
             PutInSlotMap();
         }
-        if(outline != null) 
-            outline.SetActive(false);
-        isSelected = false;
     }
     
     public void Select()
@@ -51,14 +46,11 @@ public class Envanter : MonoBehaviour, IEnvantable
         {
             return;
         }
-        isSelected = true;
         if(isPlaced)
         {
             AssignGridInEnvantersGridsToNull();
         }
         isPlaced = false;
-        if(outline != null) 
-            outline.SetActive(true);
     }
     private bool CheckAnyItem()
     {
@@ -293,5 +285,16 @@ public class Envanter : MonoBehaviour, IEnvantable
     public bool IsInvolveAnyItem()
     {
         return CheckAnyItem();
+    }
+
+    public void OnPointerEnter()
+    {
+        outline.SetActive(true);
+    }
+
+    public void OnPointerExit()
+    {
+        outline.SetActive(false);
+        
     }
 }

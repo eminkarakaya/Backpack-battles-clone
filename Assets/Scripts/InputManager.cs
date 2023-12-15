@@ -37,7 +37,7 @@ public class InputManager
             {
                 if(slotForEnvanter != null)
                 {
-                    slotForEnvanter.OnPointerExit();
+                    slotForEnvanter.OnPointerExitWhileSelectedObject();
                     slotForEnvanter = value;
                 }
                 return;
@@ -48,19 +48,40 @@ public class InputManager
                 {
                     
                     if(slotForEnvanter != null)
-                        slotForEnvanter.OnPointerExit();
+                        slotForEnvanter.OnPointerExitWhileSelectedObject();
                     slotForEnvanter = value;
                     if(slotForEnvanter != null)
                     {
-                        slotForEnvanter.OnPointerEnter();
+                        slotForEnvanter.OnPointerEnterWhileSelectedObject();
                     }
                 }
                 return;
             }
             slotForEnvanter = value;
         }}
-    ISlotForItem slotForItem;
-    
+        
+    IDragAndDropable dragAndDropablePointerEnter;
+    public IDragAndDropable DragAndDropablePointerEnter { get => dragAndDropablePointerEnter; set{
+        if(value == null)
+        {
+            if(dragAndDropablePointerEnter != null)
+            {
+                dragAndDropablePointerEnter.OnPointerExit();    
+            }
+            dragAndDropablePointerEnter = null;
+            return;
+        }
+        else if(value != dragAndDropablePointerEnter)
+        {
+            if(dragAndDropablePointerEnter != null)
+            {
+                dragAndDropablePointerEnter.OnPointerExit();    
+            }
+            dragAndDropablePointerEnter = value;
+            dragAndDropablePointerEnter.OnPointerEnter();
+            return;
+        }
+    }}
     IDragAndDropable dragAndDropable;
     public IDragAndDropable DragAndDropable {
         get=>dragAndDropable;
@@ -72,18 +93,40 @@ public class InputManager
                 dragAndDropable.Select();
         }
     }
+    IEnvantable envantablePointerEnter;
+    IEnvantable EnvantablePointerEnter{get => envantablePointerEnter; set{
+        if(value == null)
+        {
+            if(envantablePointerEnter != null)
+            {
+                envantablePointerEnter.OnPointerExit();    
+            }
+            envantablePointerEnter = null;
+            return;
+        }
+        else if(value != envantablePointerEnter)
+        {
+            if(envantablePointerEnter != null)
+            {
+                envantablePointerEnter.OnPointerExit();    
+            }
+            envantablePointerEnter = value;
+            envantablePointerEnter.OnPointerEnter();
+            return;
+        }
+    }}
     IEnvantable envantable;
-
     IEnvantable Envantable{get=>envantable;
     set{
         envantable = value;
             if(envantable != null)
         envantable.Select();
     }}
-
     IInputItem InputItem;
     IInputEnvanterItem InputEnvanterItem;
     IInputSlotMap InputSlotMap;
+
+    IEnvantable envantable1;
     public void Initialize()
     {
         InputItem = new CastRayClassForItem(OnTouchBegan,OnTouching,OnTouchEndItem,OnRotate);
@@ -101,17 +144,40 @@ public class InputManager
         {
             Envantable = null;
         }
-        if (InputItem.CheckClickable(itemlayerMask))
+        if(InputItem.CheckClickable(itemlayerMask,out IDragAndDropable outDragAndDropable))
         {
-            DragAndDropable = InputItem.SelectClickable(itemlayerMask);
+            DragAndDropablePointerEnter = outDragAndDropable;
+            if (InputItem.CheckInput())
+            {
+                this.DragAndDropable = outDragAndDropable;
+                DragAndDropable = InputItem.SelectClickable(itemlayerMask);
+            }
+            EnvantablePointerEnter = null;
         }
-        else if(InputEnvanterItem.CheckClickable(envanterLayerMask))
+        else if(InputEnvanterItem.CheckClickable(envanterLayerMask,out envantable1))
         {
-            Envantable = InputEnvanterItem.SelectClickable(envanterLayerMask);
+            EnvantablePointerEnter = envantable1;
+            if(InputEnvanterItem.CheckInput())
+            {
+                if(!envantable1.IsInvolveAnyItem())
+                {
+                    this.Envantable = envantable1;
+                    Envantable = InputEnvanterItem.SelectClickable(envanterLayerMask);
+                } 
+            }
+        }
+        if(outDragAndDropable == null)
+        {
+            DragAndDropablePointerEnter = null;
+        }
+        if(envantable1 == null)
+        {
+            EnvantablePointerEnter = null;
         }
         // envanterItem
 
         // slotable
+        
         InputEnvanterItem.UpdateTick();
         // Slotable = InputSlotMap.OnPointerSlotable(gridLayerMask);
         SlotForEnvanter = InputEnvanterItem.OnPointerSlotable(envanterGridLayerMask);
@@ -143,7 +209,7 @@ public class InputManager
             DragAndDropable.OnTouchEnd();
             if(SlotForEnvanter != null)
             {
-                SlotForEnvanter.OnPointerExit();
+                SlotForEnvanter.OnPointerExitWhileSelectedObject();
                 SlotForEnvanter = null;
             }
         }

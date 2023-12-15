@@ -160,7 +160,7 @@ SpriteRenderer:
   m_SortingOrder: 2
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.07058824}
+  m_Color: {r: 0.6415094, g: 0.62577426, b: 0.62577426, a: 0.07058824}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -181,7 +181,7 @@ GameObject:
   - component: {fileID: 3973525352513168804}
   - component: {fileID: 9132950676554353099}
   - component: {fileID: 7707915349258076053}
-  - component: {fileID: 8604847261497438217}
+  - component: {fileID: 6475481595082309195}
   m_Layer: 3
   m_Name: Right (1)
   m_TagString: Untagged
@@ -271,7 +271,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   gridInEnvanter: {fileID: 0}
---- !u!114 &8604847261497438217
+--- !u!114 &6475481595082309195
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -280,7 +280,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3581825937568739468}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02d82c87fc8b56443b893028f894bf0d, type: 3}
+  m_Script: {fileID: 11500000, guid: f0a44ec8f49cd2e4f8419dac82796228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slot: {fileID: 0}
@@ -295,7 +295,7 @@ GameObject:
   - component: {fileID: 2925224411657472691}
   - component: {fileID: 2627384595658457832}
   - component: {fileID: 7142013360989301005}
-  - component: {fileID: 4935504975672241349}
+  - component: {fileID: 9154132901114998352}
   m_Layer: 3
   m_Name: Middle (1)
   m_TagString: Untagged
@@ -385,7 +385,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   gridInEnvanter: {fileID: 0}
---- !u!114 &4935504975672241349
+--- !u!114 &9154132901114998352
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -394,7 +394,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3859901429183662818}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02d82c87fc8b56443b893028f894bf0d, type: 3}
+  m_Script: {fileID: 11500000, guid: f0a44ec8f49cd2e4f8419dac82796228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slot: {fileID: 0}
@@ -473,7 +473,7 @@ SpriteRenderer:
   m_SortingOrder: 2
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.07058824}
+  m_Color: {r: 0.6415094, g: 0.62577426, b: 0.62577426, a: 0.07058824}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -798,7 +798,7 @@ SpriteRenderer:
   m_SortingOrder: 2
   m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf,
     type: 3}
-  m_Color: {r: 1, g: 1, b: 1, a: 0.07058824}
+  m_Color: {r: 0.6415094, g: 0.62577426, b: 0.62577426, a: 0.07058824}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 2
@@ -854,7 +854,7 @@ GameObject:
   - component: {fileID: 5803294600867053659}
   - component: {fileID: 3422008180637920712}
   - component: {fileID: 5942668674830849760}
-  - component: {fileID: 5893374736271038405}
+  - component: {fileID: 1852858940385469599}
   m_Layer: 3
   m_Name: Left (1)
   m_TagString: Untagged
@@ -944,7 +944,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   item: {fileID: 0}
   gridInEnvanter: {fileID: 0}
---- !u!114 &5893374736271038405
+--- !u!114 &1852858940385469599
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -953,7 +953,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 8876026950612471318}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 02d82c87fc8b56443b893028f894bf0d, type: 3}
+  m_Script: {fileID: 11500000, guid: f0a44ec8f49cd2e4f8419dac82796228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   slot: {fileID: 0}

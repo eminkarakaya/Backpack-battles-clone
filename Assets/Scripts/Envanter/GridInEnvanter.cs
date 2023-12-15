@@ -22,13 +22,12 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
         spriteRenderer.color = Color.gray;
     }
     
-    public void OnPointerEnter()
+    public void OnPointerEnterWhileSelectedObject()
     {
         OpenPutableColor();
-        GridManager.Instance.selectedGridInEnvanter = this;
     }
 
-    public void OnPointerExit()
+    public void OnPointerExitWhileSelectedObject()
     {
         ClosePutableColor();
         TriggerOnPointerExit();
@@ -86,7 +85,6 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     public void TriggerOnPointerExit()
     {
         // spriteRenderer.color = Color.gray;
-        GridManager.Instance.selectedGridInEnvanter = null;
     }
     
 }
