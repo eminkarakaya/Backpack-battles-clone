@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class GridInItem : MonoBehaviour,ISlotForItem
 {
-    public Item item;
+    public ItemDragAndDrop item;
     public GridInEnvanter gridInEnvanter;
     SpriteRenderer spriteRenderer;
     private void Start() {
-        item = GetComponentInParent<Item>();
+        item = GetComponentInParent<ItemDragAndDrop>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void OpenPutableColor()
@@ -36,7 +36,7 @@ public class GridInItem : MonoBehaviour,ISlotForItem
         }
         return true;
     }
-    public void SetItem(Item item)
+    public void SetItem(ItemDragAndDrop item)
     {
         this.item = item;
     }

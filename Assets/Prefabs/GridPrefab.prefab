@@ -101,6 +101,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   neighbourTriggerObj: {fileID: 3754205826876254264}
+  neighbourTriggerObjEmpty: {fileID: 3754205826876254264}
   gridInEnvanter: {fileID: 0}
   right: {fileID: 0}
   left: {fileID: 0}

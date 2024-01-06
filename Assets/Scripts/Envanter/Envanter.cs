@@ -5,18 +5,18 @@ using UnityEngine;
 
 public class Envanter : MonoBehaviour, IEnvantable
 {
-    [SerializeField] private SubGridPutting [] subGrids;
+    private SubGridPutting [] subGrids;
     protected GridInEnvanter [] childGridsInEnvanterDefault; // sol ust -0  - sag ust -1  sol alt -2  sag alt -3
     SpriteRenderer spriteRenderer;
     [SerializeField] private GameObject outline;
-    [SerializeField] private byte rotateStage;
+    private byte rotateStage;
     public byte RotateStage { get => rotateStage; set
     {
         rotateStage = value;
         rotateStage%=4;
     }} 
 
-    [SerializeField] bool isPlaced;
+    bool isPlaced;
     private void Start() {
         subGrids = GetComponentsInChildren<SubGridPutting>();
         childGridsInEnvanterDefault = GetComponentsInChildren<GridInEnvanter>();

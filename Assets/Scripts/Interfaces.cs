@@ -16,7 +16,6 @@ public interface IDragAndDropableBase
     public void OnDrag();
     public void OnTouchEnd();
     public void Select();
-    public void PutInSlotMap();
     public void OnPointerEnter();
     public void OnPointerExit();
 
@@ -25,11 +24,13 @@ public interface IEnvantable : IDragAndDropableBase
 {
     public bool IsInvolveAnyItem();
     public ISlotable [] TakeOffSlotMap();
+    public void PutInSlotMap();
+
 
 }
 public interface IDragAndDropable : IDragAndDropableBase
 {
-    public void TakeOffSlotMap();
+    
 }
 
 public interface ISlot
@@ -79,40 +80,13 @@ public interface IInputSlotMap
 
 
 
-
-
-
-
-public interface OnPointerAlertable
-{
-    public void OpenAlert();
-    public void CloseAlert();
-}
-
 public interface ISlotable
 {
     public Grid [] GetGrids();
-    public void PutInSlot();
     public void TakeOffSlot();
 }
 
-
-public enum Direction3x1
+public interface NeighbourBonusable
 {
-    Middle,Right,Left
-}
-public enum Direction4
-{
-    UpLeft,
-    UpRight,
-    DownLeft,
-    DownRight
-}
-public enum DirectionRightLeft
-{
-}
-public enum DirectionUpDownRightLeft
-{
-    Right,Left,
-    Up,Down
+    
 }

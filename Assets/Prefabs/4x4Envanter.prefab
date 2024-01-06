@@ -139,7 +139,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6457255695398903621}
   - component: {fileID: 2263122029989398869}
-  - component: {fileID: 8915735601359194124}
+  - component: {fileID: 8991480257720196175}
   m_Layer: 7
   m_Name: 4x4Envanter
   m_TagString: Untagged
@@ -212,7 +212,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2, y: 2}
   m_EdgeRadius: 0
---- !u!114 &8915735601359194124
+--- !u!114 &8991480257720196175
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -221,7 +221,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2313753480722615602}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 31d4cd49356a9a54ebc4920e81016d5f, type: 3}
+  m_Script: {fileID: 11500000, guid: d54949cd7ad3cc24b91368feb150c39c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   subGrids: []

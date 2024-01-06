@@ -38,4 +38,12 @@ public class GridManager : Singleton<GridManager>
         int i = (index.y * scale.x) + index.x;
         return allGrids[i];
     }
+    [ContextMenu("StartGame")]
+    public void StartGame()
+    {
+        foreach (var item in allGrids)
+        {
+            item.ExecuteSubNeighbours();
+        }
+    }
 }

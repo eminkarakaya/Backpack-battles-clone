@@ -55,11 +55,11 @@ public class SubGridNeighbour : SubGrid
                 {
                     if(grid.gridInEnvanter != null)
                     {
-                        grid.OpenNeighbourTrigger();
+                        grid.OpenNeighbourTriggerEmpty();
                     }
                     else
                     {
-                        grid.OpenNeighbourTrigger();
+                        grid.OpenNeighbourTriggerEmpty();
                         // grid.OnPointerEnter();
                     }
                 }
@@ -67,10 +67,10 @@ public class SubGridNeighbour : SubGrid
             slot = grid;
             if(grid.gridInEnvanter != null)
             {
-                slot.OpenNeighbourTrigger();
+                slot.OpenNeighbourTriggerEmpty();
             }
             else
-                slot.OpenNeighbourTrigger();
+                slot.OpenNeighbourTriggerEmpty();
                 // grid.OnPointerEnter();
             return grid;
         }

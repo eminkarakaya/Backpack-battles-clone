@@ -1,0 +1,12 @@
+
+
+actions
+    on start battle
+    on hit
+    on attacked
+    on shop entered
+    on health below %??
+    when you have at least .. ??
+
+
+* activates = 
