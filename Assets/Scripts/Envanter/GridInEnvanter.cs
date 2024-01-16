@@ -47,7 +47,7 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     {
         if(gridInItem != null)
         {   
-            gridInItem.item = item;
+            gridInItem.itemDragAndDrop = item;
         }
     }
     /// Eger nullsa true doner.
@@ -55,11 +55,14 @@ public class GridInEnvanter : MonoBehaviour, ISlotForEnvanter
     {
         if(gridInItem == null) 
             return true;
-        return gridInItem.item == null;
+        return gridInItem.itemDragAndDrop == null;
     }
     public void TriggerOnPointerExit()
     {
         // spriteRenderer.color = Color.gray;
     }
-    
+    public ItemType GetItemType()
+    {
+        return gridInItem.itemDragAndDrop.GetComponent<ItemMono>().item.itemType;
+    }
 }

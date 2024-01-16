@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class GridInItem : MonoBehaviour,ISlotForItem
 {
-    public ItemDragAndDrop item;
+    public ItemDragAndDrop itemDragAndDrop;
     public GridInEnvanter gridInEnvanter;
     SpriteRenderer spriteRenderer;
     private void Start() {
-        item = GetComponentInParent<ItemDragAndDrop>();
+        itemDragAndDrop = GetComponentInParent<ItemDragAndDrop>();
         spriteRenderer = GetComponent<SpriteRenderer>();
     }
     public void OpenPutableColor()
@@ -30,7 +30,7 @@ public class GridInItem : MonoBehaviour,ISlotForItem
     }
     public bool CheckEnvanterGridAnyItem()
     {
-        if(item == null)
+        if(itemDragAndDrop == null)
         {
             return false;
         }
@@ -38,7 +38,7 @@ public class GridInItem : MonoBehaviour,ISlotForItem
     }
     public void SetItem(ItemDragAndDrop item)
     {
-        this.item = item;
+        this.itemDragAndDrop = item;
     }
     /// <summary>
     /// Eger nullsa true doner.
@@ -46,7 +46,7 @@ public class GridInItem : MonoBehaviour,ISlotForItem
     /// <returns></returns>
     public bool IsNullItem()
     {
-        return item == null;
+        return itemDragAndDrop == null;
     }
     public void TriggerOnPointerExit()
     {

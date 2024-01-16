@@ -5,15 +5,16 @@ using UnityEngine;
 public class WeaponMono : ItemMono
 {
     ActionBase actionBase;
-    Weapon weapon;
+    public Weapon weapon;
     [SerializeField] private int damage;
     private void Start() {
-        weapon = new Weapon(damage);
+        item = new Weapon(damage);
+        weapon = (Weapon) item;
         actionBase = GetComponent<ActionBase>();
         actionBase.AddFuncTriggerDuration(()=>weapon.OnAttack());
         
     }
     private void OnDisable() {
-        actionBase.RemoveFuncTriggerDuration(()=>weapon.OnAttack());
+        // actionBase.RemoveFuncTriggerDuration(()=>weapon.OnAttack());
     }
 }

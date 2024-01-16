@@ -5,47 +5,51 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
-public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
+public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable, ISlotable
 {
-    private SubGridPutting [] subGridsPutting;
-    private SubGridNeighbour [] subGridsNeighbours;
+    private SubGridPutting[] subGridsPutting;
+    private SubGridNeighbour[] subGridsNeighbours;
     [SerializeField] private GameObject scaledGameObject;
     private float scaleMultiplier = 1.1f;
-    [SerializeField] protected GridInItem []  gridsInItemDefault;
+    [SerializeField] protected GridInItem[] gridsInItemDefault;
     private byte rotateStage;
     SpriteRenderer[] childSpriteRenderers;
-    public byte RotateStage { get => rotateStage; set
+    public byte RotateStage
     {
-        rotateStage = value;
-        rotateStage%=4;
-    }} 
+        get => rotateStage; set
+        {
+            rotateStage = value;
+            rotateStage %= 4;
+        }
+    }
     private bool isPlaced;
     public List<GridInEnvanter> GetGridInEnvanters()
     {
         List<Grid> grids = new List<Grid>();
         foreach (var item in subGridsPutting)
         {
-            grids.Add(item.slot);            
+            grids.Add(item.selectedGrid);
         }
-        return grids.Select(x=>x.gridInEnvanter).ToList();
+        return grids.Select(x => x.gridInEnvanter).ToList();
     }
     public bool CheckGrid()
     {
         foreach (var item in subGridsPutting)
         {
-            if(!item.CheckEnvanterGrid(InputManagerMono.Instance.layermaskGrid))
+            if (!item.CheckEnvanterGrid(InputManagerMono.Instance.layermaskGrid))
             {
                 return false;
             }
         }
         return true;
     }
-    private void Start() {
-        subGridsPutting =  GetComponentsInChildren<SubGridPutting>();
-        subGridsNeighbours =  GetComponentsInChildren<SubGridNeighbour>();
+    private void Start()
+    {
+        subGridsPutting = GetComponentsInChildren<SubGridPutting>();
+        subGridsNeighbours = GetComponentsInChildren<SubGridNeighbour>();
         childSpriteRenderers = GetComponentsInChildren<SpriteRenderer>();
     }
-   
+
     public void OnDrag()
     {
         transform.position = MouseWorldPosition();
@@ -61,7 +65,7 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
 
     public void OnTouchEnd()
     {
-        if(CheckGrid())
+        if (CheckGrid())
         {
             PutInSlot();
         }
@@ -71,7 +75,7 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
 
     public void Select()
     {
-        if(isPlaced)
+        if (isPlaced)
         {
             AssignGridInEnvantersGridsToNull();
         }
@@ -99,17 +103,17 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
             slotable.TakeOffSlot();
         }
         AssignGridInEnvantersGrids(grids);
-        transform.position = Grid.GetCenter(grids.Select(x=>x.transform));
+        transform.position = Grid.GetCenter(grids.Select(x => x.transform));
         foreach (var item in gridsInItemDefault)
         {
             item.gridInEnvanter.ClosePutableColor();
         }
         foreach (var item in subGridsNeighbours)
         {
-            if(item.slot != null)
-                item.slot.AddSubgridNeighbour(item);
+            if (item.selectedGrid != null)
+                item.selectedGrid.AddSubgridNeighbour(item);
         }
-        
+
         isPlaced = true;
         ClosePutableColorChilds();
     }
@@ -118,7 +122,7 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
         for (int i = 0; i < gridsInItemDefault.Length; i++)
         {
             gridsInItemDefault[i].gridInEnvanter = grids[i];
-            if(gridsInItemDefault[i].gridInEnvanter != null)
+            if (gridsInItemDefault[i].gridInEnvanter != null)
             {
                 gridsInItemDefault[i].gridInEnvanter.SetItem(this);
             }
@@ -130,11 +134,11 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
         List<ISlotable> envanters = new List<ISlotable>();
         foreach (var item in grids)
         {
-            if(!item.IsNullItem())
+            if (!item.IsNullItem())
             {
-                if(!envanters.Contains(item.gridInItem.item))
+                if (!envanters.Contains(item.gridInItem.itemDragAndDrop))
                 {
-                    envanters.Add(item.gridInItem.item);
+                    envanters.Add(item.gridInItem.itemDragAndDrop);
                 }
             }
         }
@@ -148,15 +152,16 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
     {
         for (int i = 0; i < gridsInItemDefault.Length; i++)
         {
-            if(gridsInItemDefault[i].gridInEnvanter != null)
+            if (gridsInItemDefault[i].gridInEnvanter != null)
             {
                 gridsInItemDefault[i].gridInEnvanter.gridInItem = null;
                 gridsInItemDefault[i].gridInEnvanter = null;
-            }            
+            }
         }
         foreach (var item in subGridsNeighbours)
         {
-            item.slot.RemoveSubgridNeighbour(item);
+            item.selectedGrid.RemoveSubgridNeighbour(item);
+            item.AssignSelectedGridToNull();
         }
     }
     public void TakeOffSlot()
@@ -168,35 +173,35 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
 
     public void RotateCounterClockwise90Degree()
     {
-        RotateStage --;
+        RotateStage--;
         RotateCounterClockwiseAnimation();
     }
 
     public void RotateClockwise90Degree()
     {
-        RotateStage ++;
+        RotateStage++;
         Rotate90ClockwiseAnimation();
     }
     private void Rotate90ClockwiseAnimation()
     {
-        transform.rotation = Quaternion.Euler(0,0,RotateStage * 90);
+        transform.rotation = Quaternion.Euler(0, 0, RotateStage * 90);
     }
     private void RotateCounterClockwiseAnimation()
     {
-        transform.rotation = Quaternion.Euler(0,0,RotateStage * 90);
+        transform.rotation = Quaternion.Euler(0, 0, RotateStage * 90);
     }
 
     public Grid[] GetGrids()
     {
-        Grid [] grids = new Grid[gridsInItemDefault.Length];
+        Grid[] grids = new Grid[gridsInItemDefault.Length];
         foreach (var item in gridsInItemDefault)
         {
-            if(item.gridInEnvanter == null)
+            if (item.gridInEnvanter == null)
             {
                 return null;
             }
         }
-        return gridsInItemDefault.Select(x=>x.gridInEnvanter.grid).ToArray();
+        return gridsInItemDefault.Select(x => x.gridInEnvanter.grid).ToArray();
     }
     private void SpriteOrderMax()
     {
@@ -204,7 +209,7 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
         {
             childSpriteRenderers[i].sortingLayerID = SortingLayer.NameToID(ItemManager.Instance.itemSelectedLayer);
         }
-        
+
     }
     private void SpriteOrderDefault()
     {
@@ -215,7 +220,7 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
     }
     private void ScaleIncrease()
     {
-        scaledGameObject.transform.localScale = Vector3.one*scaleMultiplier;
+        scaledGameObject.transform.localScale = Vector3.one * scaleMultiplier;
     }
     private void ScaleDefault()
     {
@@ -252,9 +257,9 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
     {
         foreach (var subGridNeighbour in subGridsNeighbours)
         {
-            if(subGridNeighbour.slot != null)
+            if (subGridNeighbour.selectedGrid != null)
             {
-                subGridNeighbour.slot.OpenNeighbourTriggerEmpty();
+                subGridNeighbour.OpenNeighbourTrigger(subGridNeighbour.selectedGrid);
             }
         }
     }
@@ -262,9 +267,9 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable ,ISlotable
     {
         foreach (var item in subGridsNeighbours)
         {
-            if(item.slot != null)
+            if (item.selectedGrid != null)
             {
-                item.slot.CloseNeighbourTrigger();
+                item.CloseNeighbourTrigger();
             }
         }
 

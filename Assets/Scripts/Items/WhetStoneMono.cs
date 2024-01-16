@@ -3,7 +3,8 @@ public class WhetStoneMono : WeaponMono
 {
     public WhetStone whetStone;
     private void Start() {
-        whetStone = new WhetStone();
+        item = new WhetStone();
+        whetStone = (WhetStone) item; 
     }
     public override void Execute()
     {

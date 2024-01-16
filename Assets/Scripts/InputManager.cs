@@ -2,34 +2,6 @@ using UnityEngine;
 public class InputManager
 {
     ISlotForGrid slotable;
-    // ISlotForGrid Slotable{get=>slotable;
-    // set{
-    //     if(value == null && Envantable != null)
-    //     {
-    //         if(slotable != null)
-    //         {
-    //             // slotable.OnPointerExit();
-    //             slotable = value;
-    //         }
-    //         return;
-    //     }
-    //     if(value != slotable)
-    //     {       
-    //         if(Envantable != null)
-    //         {
-    //             if(slotable != null)
-    //                 // slotable.OnPointerExit();
-    //             slotable = value;
-    //             if(slotable != null)
-    //             {
-    //                 // slotable.OnPointerEnter();
-    //             }
-    //         }
-    //         return;
-    //     }
-    //     slotable = value;
-    // }}
-
     ISlotForEnvanter slotForEnvanter;
     ISlotForEnvanter SlotForEnvanter{get=>slotForEnvanter;
         set{
@@ -73,6 +45,7 @@ public class InputManager
         }
         else if(value != dragAndDropablePointerEnter)
         {
+            if(DragAndDropable != null) return;
             if(dragAndDropablePointerEnter != null)
             {
                 dragAndDropablePointerEnter.OnPointerExit();    

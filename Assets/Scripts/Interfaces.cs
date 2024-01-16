@@ -2,13 +2,7 @@ using UnityEngine;
 
 public interface IDragAndDropableBase
 {
-    /// <summary>
-    /// 0 -> 0 Degree
-    /// 1 -> +90 Degree
-    /// 2 -> +180 Degree
-    /// 3 -> +270 Degree
-    /// </summary>
-    /// <value></value>
+    
     
     public void RotateCounterClockwise90Degree();
     public void RotateClockwise90Degree();

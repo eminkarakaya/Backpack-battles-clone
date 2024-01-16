@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class Item 
 {
+    public ItemType itemType;
     public virtual void Execute()
     {
         

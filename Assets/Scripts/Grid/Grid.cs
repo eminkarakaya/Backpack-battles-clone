@@ -34,7 +34,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
     {
         if(gridInEnvanter!=null && gridInEnvanter.gridInItem != null)
         {
-            if(gridInEnvanter.gridInItem.item.TryGetComponent(out ItemMono item))
+            if(gridInEnvanter.gridInItem.itemDragAndDrop.TryGetComponent(out ItemMono item))
             {
                 item.Execute();
             }
@@ -74,6 +74,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
     public void CloseNeighbourTrigger()
     {
         neighbourTriggerObjEmpty.SetActive(false);
+        neighbourTriggerObj.SetActive(false);
     }
     public void TriggerOnPointerEnter()
     {
@@ -140,7 +141,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
         }
         return pos/i;
     }
-
+    
     
 
 }

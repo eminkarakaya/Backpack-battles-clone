@@ -1,13 +1,13 @@
 public class WhetStone : Item
 {
-    Weapon [] weapons;
     NeighbourBonus<Weapon> neighbourBonus;
+
+    private void Start() {
+        
+    }
     public override void Execute()
     {
-        foreach (var item in weapons)
-        {
-            item.damage ++;
-        }
+        
     } 
     public WhetStone()
     {

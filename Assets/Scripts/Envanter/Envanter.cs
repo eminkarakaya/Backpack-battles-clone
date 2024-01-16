@@ -85,9 +85,9 @@ public class Envanter : MonoBehaviour, IEnvantable
         List<ISlotable> slotables = new List<ISlotable>(); // grid
         for (int i = 0; i < childGridsInEnvanterDefault.Length; i++)
         {
-            if(childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem != null &&  childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem.item != null)
+            if(childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem != null &&  childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem.itemDragAndDrop != null)
             {
-                slotables.Add(childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem.item);
+                slotables.Add(childGridsInEnvanterDefault[i].grid.gridInEnvanter.gridInItem.itemDragAndDrop);
             }
             if(childGridsInEnvanterDefault[i].gridInItem != null && childGridsInEnvanterDefault[i].gridInItem.gridInEnvanter != null)
             {
@@ -154,7 +154,7 @@ public class Envanter : MonoBehaviour, IEnvantable
         List<Grid> grids = new List<Grid>();
         foreach (var item in subGrids)
         {
-            grids.Add(item.slot);
+            grids.Add(item.selectedGrid);
         }
         return grids;
     }
