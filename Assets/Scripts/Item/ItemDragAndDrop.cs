@@ -7,6 +7,8 @@ using UnityEngine.EventSystems;
 
 public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable, ISlotable
 {
+    public UnityEvent OnTriggerEnterEvent;
+    public UnityEvent OnTriggerExitEvent;
     private SubGridPutting[] subGridsPutting;
     private SubGridNeighbour[] subGridsNeighbours;
     [SerializeField] private GameObject scaledGameObject;
@@ -278,10 +280,12 @@ public class ItemDragAndDrop : MonoBehaviour, IDragAndDropable, ISlotable
     public void OnPointerEnter()
     {
         OpenNeighbourTrigger();
+        OnTriggerEnterEvent?.Invoke();
     }
 
     public void OnPointerExit()
     {
         CloseNeighbourTrigger();
+        OnTriggerExitEvent?.Invoke();
     }
 }

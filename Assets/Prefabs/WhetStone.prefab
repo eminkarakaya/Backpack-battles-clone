@@ -98,7 +98,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9abf7816c4089c9419a17ca39f72d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slot: {fileID: 0}
+  selectedGrid: {fileID: 0}
+  itemType: 0
 --- !u!1 &1360998214466319349
 GameObject:
   m_ObjectHideFlags: 0
@@ -255,7 +256,7 @@ Transform:
   - {fileID: 8825386202860623547}
   - {fileID: 6138361087209051909}
   m_Father: {fileID: 0}
-  m_RootOrder: 10
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &516310052437702723
 SpriteRenderer:
@@ -367,6 +368,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 19a8f7d8649831f4daeb38cfd5147dbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  OnTriggerEnterEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7453127221407162927}
+        m_TargetAssemblyTypeName: WeaponMono, Assembly-CSharp
+        m_MethodName: OnTriggerEnter
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  OnTriggerExitEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 7453127221407162927}
+        m_TargetAssemblyTypeName: WeaponMono, Assembly-CSharp
+        m_MethodName: OnTriggerExit
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   scaledGameObject: {fileID: 1715114054329533272}
   gridsInItemDefault:
   - {fileID: 3019887901274942865}
@@ -382,6 +413,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 792c515a5f1acdd49957825227e96e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  damage: 0
 --- !u!1 &4684447311777122316
 GameObject:
   m_ObjectHideFlags: 0
@@ -649,7 +681,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9abf7816c4089c9419a17ca39f72d0a3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slot: {fileID: 0}
+  selectedGrid: {fileID: 0}
+  itemType: 0
 --- !u!1 &8428515790100091086
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,7 +782,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db489d75c592e0b48b4597d9970006b4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  item: {fileID: 0}
+  itemDragAndDrop: {fileID: 0}
   gridInEnvanter: {fileID: 0}
 --- !u!114 &4603561960263024871
 MonoBehaviour:
@@ -763,4 +796,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f0a44ec8f49cd2e4f8419dac82796228, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  slot: {fileID: 0}
+  selectedGrid: {fileID: 0}

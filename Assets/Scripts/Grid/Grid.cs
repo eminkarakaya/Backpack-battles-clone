@@ -36,7 +36,7 @@ public class Grid : MonoBehaviour , ISlotForGrid
         {
             if(gridInEnvanter.gridInItem.itemDragAndDrop.TryGetComponent(out ItemMono item))
             {
-                item.Execute();
+                // item.Execute();
             }
         }
     }

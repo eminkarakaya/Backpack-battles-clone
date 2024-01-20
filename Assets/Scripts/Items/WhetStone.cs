@@ -5,12 +5,11 @@ public class WhetStone : Item
     private void Start() {
         
     }
-    public override void Execute()
-    {
-        
-    } 
     public WhetStone()
     {
         neighbourBonus = new NeighbourBonusWhetStone();
+        itemName = this.ToString();
+        itemType = ItemType.Accessory;
+        prevalence = Prevalence.Rare;
     }
 }

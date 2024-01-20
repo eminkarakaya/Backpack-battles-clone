@@ -6,8 +6,4 @@ public class WhetStoneMono : WeaponMono
         item = new WhetStone();
         whetStone = (WhetStone) item; 
     }
-    public override void Execute()
-    {
-        whetStone.Execute(); 
-    }
 }

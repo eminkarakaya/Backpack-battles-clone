@@ -2,18 +2,22 @@ using UnityEngine;
 
 public class Item 
 {
+    public string itemName;
     public ItemType itemType;
-    public virtual void Execute()
+    public Prevalence prevalence;
+    public virtual void OnTriggerEnter()
     {
-        
+        HoverTip.Instance.OpenTipObj();
+        HoverTip.Instance.SetItemTip(this);
+
+    }   
+    public virtual void OnTriggerExit()
+    {
+        HoverTip.Instance.CloseTipObj();
     }   
 }
 public class Food : Item
 {
-    public override void Execute()
-    {
-
-    }   
     
 }
 public class WeaponStats

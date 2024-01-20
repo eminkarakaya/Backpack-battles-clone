@@ -14,13 +14,10 @@ public class WhetStoneSubgrid : MonoBehaviour
     }
     public void AssignWeapon()
     {
-            Debug.Log("assignweapon");
         if(GetComponent<SubGridNeighbour>().selectedGrid != null && GetComponent<SubGridNeighbour>().selectedGrid.gridInEnvanter.gridInItem.itemDragAndDrop.TryGetComponent(out WeaponMono weaponMono))
         {
-            Debug.Log(weapon.damage + " 111");
             weapon = weaponMono.weapon;
             GiveBuffWeapon();
-            Debug.Log(weapon.damage + " 222");
         }
     }
     public void GiveBuffWeapon()

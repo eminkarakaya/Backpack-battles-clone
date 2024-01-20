@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum ItemType
 {
-    Weapon, Food
+    Weapon, Food,Accessory
 }
 public class SubGridNeighbour : SubGrid
 {
@@ -19,6 +19,9 @@ public class SubGridNeighbour : SubGrid
                 if (itemType == grid.gridInEnvanter.gridInItem.itemDragAndDrop.GetComponent<ItemMono>().item.itemType)
                 {
                     grid.OpenNeighbourTrigger();
+                }
+                else{
+                    grid.OpenNeighbourTriggerEmpty();
                 }
             }
             else

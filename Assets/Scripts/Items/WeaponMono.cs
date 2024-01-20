@@ -17,4 +17,12 @@ public class WeaponMono : ItemMono
     private void OnDisable() {
         // actionBase.RemoveFuncTriggerDuration(()=>weapon.OnAttack());
     }
+    public override void OnTriggerEnter()
+    {
+        base.OnTriggerEnter();
+    }
+    public override void OnTriggerExit()
+    {
+        base.OnTriggerExit();
+    }
 }
