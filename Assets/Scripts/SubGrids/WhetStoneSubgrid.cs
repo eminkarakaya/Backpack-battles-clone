@@ -14,7 +14,7 @@ public class WhetStoneSubgrid : MonoBehaviour
     }
     public void AssignWeapon()
     {
-        if(GetComponent<SubGridNeighbour>().selectedGrid != null && GetComponent<SubGridNeighbour>().selectedGrid.gridInEnvanter.gridInItem.itemDragAndDrop.TryGetComponent(out WeaponMono weaponMono))
+        if(GetComponent<SubGridNeighbour>().selectedGrid != null && GetComponent<SubGridNeighbour>().selectedGrid.gridInEnvanter!=null&& GetComponent<SubGridNeighbour>().selectedGrid.gridInEnvanter.gridInItem!=null  && GetComponent<SubGridNeighbour>().selectedGrid.gridInEnvanter.gridInItem.itemDragAndDrop.TryGetComponent(out WeaponMono weaponMono))
         {
             weapon = weaponMono.weapon;
             GiveBuffWeapon();

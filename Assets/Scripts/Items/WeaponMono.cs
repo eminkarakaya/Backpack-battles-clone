@@ -7,12 +7,13 @@ public class WeaponMono : ItemMono
     ActionBase actionBase;
     public Weapon weapon;
     [SerializeField] private int damage;
+    [SerializeField] private float cooldown;
+    [SerializeField] private string itemName;
     private void Start() {
-        item = new Weapon(damage);
+        item = new Weapon(damage,cooldown,itemName);
         weapon = (Weapon) item;
         actionBase = GetComponent<ActionBase>();
         actionBase.AddFuncTriggerDuration(()=>weapon.OnAttack());
-        
     }
     private void OnDisable() {
         // actionBase.RemoveFuncTriggerDuration(()=>weapon.OnAttack());

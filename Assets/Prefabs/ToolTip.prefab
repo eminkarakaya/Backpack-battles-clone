@@ -620,6 +620,8 @@ MonoBehaviour:
   itemType: 0
   prevalenceText: {fileID: 4388561699055648390}
   itemTypeText: {fileID: 4528852942685036603}
+  damageText: {fileID: 9102828428345821635}
+  cooldownText: {fileID: 3103838686831562890}
   tipObj: {fileID: 4121477409779031935}
   weaponStatsObj: {fileID: 7068451917552688511}
   itemNameText: {fileID: 4479681587237717271}

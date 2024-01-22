@@ -497,6 +497,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   damage: 0
+  cooldown: 0
+  itemName: Dolunay Kilici
 --- !u!114 &7393151915095169707
 MonoBehaviour:
   m_ObjectHideFlags: 0

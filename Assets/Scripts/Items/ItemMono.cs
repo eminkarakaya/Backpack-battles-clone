@@ -8,6 +8,7 @@ public class ItemMono : MonoBehaviour
     public virtual void OnTriggerEnter()
     {
         item.OnTriggerEnter();
+        HoverTip.Instance.SetItemTip(this);
     }
     public virtual void OnTriggerExit()
     {

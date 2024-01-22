@@ -8,13 +8,16 @@ public class Item
     public virtual void OnTriggerEnter()
     {
         HoverTip.Instance.OpenTipObj();
-        HoverTip.Instance.SetItemTip(this);
 
     }   
     public virtual void OnTriggerExit()
     {
         HoverTip.Instance.CloseTipObj();
     }   
+    public Item()
+    {
+        itemName = this.ToString();
+    }
 }
 public class Food : Item
 {
@@ -28,11 +31,14 @@ public class WeaponStats
 public class Weapon : Item
 {
     // stats
-    public Weapon(int damage)
+    public Weapon(int damage,float cooldown,string itemName)
     {
+        this.itemName = itemName;
         this.damage = damage; 
+        this.cooldown = cooldown; 
     }
     public int damage;
+    public float cooldown;
     public void OnAttack()
     {
         Debug.Log("Attack " + this.ToString() + " dealed damage = "+damage);

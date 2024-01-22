@@ -1,5 +1,5 @@
 using UnityEngine;
-public class WhetStoneMono : WeaponMono
+public class WhetStoneMono : ItemMono
 {
     public WhetStone whetStone;
     private void Start() {

@@ -8,6 +8,7 @@ public enum ItemType
 }
 public class SubGridNeighbour : SubGrid
 {
+    
     [SerializeField] ItemType itemType;
     public void OpenNeighbourTrigger(Grid grid)
     {
@@ -47,6 +48,7 @@ public class SubGridNeighbour : SubGrid
     }
     public override Grid CastRay(int layerMask)
     {
+        Debug.Log("subgridneighbour " + this,this);
         Vector3 pos = Camera.main.WorldToScreenPoint(transform.position);
         RaycastHit2D hit = Utils.CastRay(new Vector3(pos.x, pos.y, 0), layerMask);
         if (hit.collider == null)

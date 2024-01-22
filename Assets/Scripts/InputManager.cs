@@ -34,6 +34,15 @@ public class InputManager
         
     IDragAndDropable dragAndDropablePointerEnter;
     public IDragAndDropable DragAndDropablePointerEnter { get => dragAndDropablePointerEnter; set{
+        // eger secili obje varsa onpointerExit calıssın
+        if(dragAndDropable != null || envantable != null)
+        {
+            if(dragAndDropablePointerEnter != null)
+            {
+                dragAndDropablePointerEnter.OnPointerExit();    
+            }
+            return;
+        }
         if(value == null)
         {
             if(dragAndDropablePointerEnter != null)
@@ -68,6 +77,15 @@ public class InputManager
     }
     IEnvantable envantablePointerEnter;
     IEnvantable EnvantablePointerEnter{get => envantablePointerEnter; set{
+        // eger secili obje varsa onpointerExit calıssın
+        if(DragAndDropable != null || envantable != null)
+        {
+            if(envantablePointerEnter != null)
+            {
+                envantablePointerEnter.OnPointerExit();    
+            }
+            return;
+        }
         if(value == null)
         {
             if(envantablePointerEnter != null)
@@ -180,9 +198,15 @@ public class InputManager
         if(DragAndDropable != null)
         {
             DragAndDropable.OnTouchEnd();
+            DragAndDropable.OnPointerEnter();
+                // onpointerenter yapma sebebımız objeyı secmeyı bırakınca mouse ustunde olcak zaten ondan dolayı onpointerenter calısmıcak burda calıstırıyoruz.
             if(SlotForEnvanter != null)
             {
-                SlotForEnvanter.OnPointerExitWhileSelectedObject();
+
+                // SlotForEnvanter.OnPointerExitWhileSelectedObject();
+
+                // onpointerenter yapma sebebımız objeyı secmeyı bırakınca mouse ustunde olcak zaten ondan dolayı onpointerenter calısmıcak burda calıstırıyoruz.
+                SlotForEnvanter.OnPointerEnterWhileSelectedObject();
                 SlotForEnvanter = null;
             }
         }
